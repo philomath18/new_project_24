@@ -1,8 +1,8 @@
 import pandas as pd
 import streamlit as st
+import plotly.express as px
 import requests
 import io
-import plotly.express as px
 
 # Define a function to fetch and load the latest data
 @st.cache(ttl=3600)  # Cache data for an hour
@@ -16,20 +16,17 @@ def load_data():
     response.raise_for_status()  # Raise an exception for bad responses
     
     # Read the CSV data using io.StringIO to handle potential encoding issues
-    df = pd.read_csv(io.StringIO(response.text), sep=',', on_bad_lines='warn')  
-                                           # ^^^^^^^^ Force comma as delimiter
-     
-    try:                                      #          ^ handle inconsistent lines with a warning
-      df = df.drop('Unnamed: 0', axis = 1)
+    df = pd.read_csv(io.StringIO(response.text), sep=',', on_bad_lines='warn')
+    
+    try:
+        df = df.drop('Unnamed: 0', axis = 1)  # Drop the extra index column if present
     except:
-      df = df
+        df = df
     
     return df
 
 # Fetch the latest data
 df = load_data()
-
-df['value'] = df['value'].apply(lambda x: "₹{:,.2f}".format(x))
 
 # Streamlit app layout
 st.title("Crypto Portfolio Tracker")
@@ -41,8 +38,8 @@ st.dataframe(df)
 
 # Bubble chart visualization for portfolio analysis
 st.subheader("Portfolio Overview - Bubble Chart")
-import plotly.express as px
 
+# Bubble chart (adjust columns as per your DataFrame structure)
 fig = px.scatter(
     df, 
     x='coin',  # Use the coin names on the X-axis
@@ -55,15 +52,7 @@ fig = px.scatter(
 )
 
 # Customize the layout of the bubble chart
-fig.update_traces(
-    marker=dict(sizemode='diameter', line_width=2, opacity=0.6),
-    textfont=dict(size=16, color='white'),  # Make the coin name white and bigger
-    textposition='middle center'  # Ensure coin names are centered in the bubbles
-)
+fig.update_traces(marker=dict(sizemode='diameter', line_width=2, opacity=0.6))
 
-# Customize the value display on the Y-axis as INR formatted
-fig.update_layout(
-    yaxis_tickformat="₹",  # Apply INR format on Y-axis tick labels
-)
-
+# Show the plot in Streamlit
 st.plotly_chart(fig)
