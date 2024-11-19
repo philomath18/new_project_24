@@ -1,5 +1,8 @@
 import pandas as pd
 import streamlit as st
+import requests
+import io
+import plotly.express as px
 
 # Define a function to fetch and load the latest data
 @st.cache(ttl=3600)  # Cache data for an hour
