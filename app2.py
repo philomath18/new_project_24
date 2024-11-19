@@ -42,14 +42,33 @@ st.subheader("Portfolio Overview - Bubble Chart")
 import plotly.express as px
 
 # Bubble chart (adjust columns as per your DataFrame structure)
+# fig = px.scatter(
+#     df, 
+#     x='prices', 
+#     y='qty', 
+#     size='value', 
+#     hover_name='coin', 
+#     title="Bubble Chart of Portfolio"
+# )
+# st.plotly_chart(fig)
+
+# Bubble chart (adjust columns as per your DataFrame structure)
 fig = px.scatter(
     df, 
-    x='prices', 
-    y='qty', 
-    size='value', 
-    hover_name='coin', 
+    x='coin',  # Use the coin names on the X-axis
+    y='value',  # Y-axis should be the value of the coin
+    size='value',  # Bubble size should be proportional to the value
+    color='coin',  # Color by coin type (or any other column, like 'category')
+    hover_name='coin',  # Show the coin name when hovering
+    text='coin',  # Display coin names inside the bubbles
     title="Bubble Chart of Portfolio"
 )
+
+# Customize the layout of the bubble chart
+fig.update_traces(marker=dict(sizemode='diameter', line_width=2, opacity=0.6))
+
+# Show the plot in Streamlit
 st.plotly_chart(fig)
+
 
 #color='Multiplier (X)'
