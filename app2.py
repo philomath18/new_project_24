@@ -29,6 +29,8 @@ def load_data():
 # Fetch the latest data
 df = load_data()
 
+df['value'] = df['value'].apply(lambda x: "₹{:,.2f}".format(x))
+
 # Streamlit app layout
 st.title("Crypto Portfolio Tracker")
 st.write("This dashboard shows your crypto portfolio performance.")
@@ -41,18 +43,6 @@ st.dataframe(df)
 st.subheader("Portfolio Overview - Bubble Chart")
 import plotly.express as px
 
-# Bubble chart (adjust columns as per your DataFrame structure)
-# fig = px.scatter(
-#     df, 
-#     x='prices', 
-#     y='qty', 
-#     size='value', 
-#     hover_name='coin', 
-#     title="Bubble Chart of Portfolio"
-# )
-# st.plotly_chart(fig)
-
-# Bubble chart (adjust columns as per your DataFrame structure)
 fig = px.scatter(
     df, 
     x='coin',  # Use the coin names on the X-axis
@@ -65,10 +55,15 @@ fig = px.scatter(
 )
 
 # Customize the layout of the bubble chart
-fig.update_traces(marker=dict(sizemode='diameter', line_width=2, opacity=0.6))
+fig.update_traces(
+    marker=dict(sizemode='diameter', line_width=2, opacity=0.6),
+    textfont=dict(size=16, color='white'),  # Make the coin name white and bigger
+    textposition='middle center'  # Ensure coin names are centered in the bubbles
+)
 
-# Show the plot in Streamlit
+# Customize the value display on the Y-axis as INR formatted
+fig.update_layout(
+    yaxis_tickformat="₹",  # Apply INR format on Y-axis tick labels
+)
+
 st.plotly_chart(fig)
-
-
-#color='Multiplier (X)'
