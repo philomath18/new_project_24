@@ -5,8 +5,23 @@ import streamlit as st
 @st.cache(ttl=3600)  # Cache data for an hour
 def load_data():
     # Replace YOUR_FILE_ID with the actual Google Drive file ID
-    file_url = "https://drive.google.com/file/d/1W3wyUzLnEuItWNS5Jjg6E5GUdnNpVdIT"  # Replace YOUR_FILE_ID
-    return pd.read_csv(file_url)
+    file_id = "1W3wyUzLnEuItWNS5Jjg6E5GUdnNpVdIT"
+    file_url = f"https://drive.google.com/uc?id={file_id}"
+    
+    # Download the file content
+    response = requests.get(file_url)
+    response.raise_for_status()  # Raise an exception for bad responses
+    
+    # Read the CSV data using io.StringIO to handle potential encoding issues
+    df = pd.read_csv(io.StringIO(response.text), sep=',', on_bad_lines='warn')  
+                                           # ^^^^^^^^ Force comma as delimiter
+     
+    try:                                      #          ^ handle inconsistent lines with a warning
+      df = df.drop('Unnamed: 0', axis = 1)
+    except:
+      df = df
+    
+    return df
 
 # Fetch the latest data
 df = load_data()
