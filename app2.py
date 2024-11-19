@@ -19,7 +19,7 @@ def load_data():
     df = pd.read_csv(io.StringIO(response.text), sep=',', on_bad_lines='warn')
     
     try:
-        df = df.drop('Unnamed: 0', axis = 1)  # Drop the extra index column if present
+        df = df.drop('Unnamed: 0', axis=1)  # Drop the extra index column if present
     except:
         df = df
     
@@ -28,11 +28,11 @@ def load_data():
 # Fetch the latest data
 df = load_data()
 
+# Create a new column for INR-formatted values (for display purposes)
+df['value_inr'] = df['value'].apply(lambda x: "₹{:,.2f}".format(x))
 
-df['value'] = df['value'].apply(lambda x: "₹{:,.2f}".format(x))
-
-# Calculate the total portfolio value (sum of 'value' column in numeric format before formatting to INR)
-total_value = df['value'].apply(lambda x: float(x.replace('₹', '').replace(',', ''))).sum()
+# Calculate the total portfolio value (sum of the original 'value' column, not the formatted one)
+total_value = df['value'].sum()
 
 # Format the total portfolio value in INR
 total_value_inr = "₹{:,.2f}".format(total_value)
@@ -55,7 +55,7 @@ st.subheader("Portfolio Overview - Bubble Chart")
 fig = px.scatter(
     df, 
     x='coin',  # Use the coin names on the X-axis
-    y='value',  # Y-axis should be the value of the coin
+    y='value',  # Y-axis should be the value of the coin (numeric for charting)
     size='value',  # Bubble size should be proportional to the value
     color='coin',  # Color by coin type (or any other column, like 'category')
     hover_name='coin',  # Show the coin name when hovering
