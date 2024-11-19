@@ -28,9 +28,14 @@ def load_data():
 # Fetch the latest data
 df = load_data()
 
+total_value = df['value'].sum()
+
 # Streamlit app layout
 st.title("Crypto Portfolio Tracker")
 st.write("This dashboard shows your crypto portfolio performance.")
+
+# Display the total portfolio value at the top right in bold
+st.markdown(f"<h3 style='text-align: right; font-weight: bold;'>Total Portfolio Value: {total_value}</h3>", unsafe_allow_html=True)
 
 # Display the DataFrame
 st.subheader("Portfolio Data")
