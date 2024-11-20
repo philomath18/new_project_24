@@ -17,7 +17,7 @@ def load_data():
     except:
         pass
     return df
-
+print('Hi')
 # Load data
 df = load_data()
 
