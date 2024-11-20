@@ -196,7 +196,7 @@ fig_lollipop.add_trace(
 
 # Customize layout
 fig_lollipop.update_layout(
-    title="Lollipop Chart for Multipliers by Coin",
+    title="Multipliers Reached by Coins",
     xaxis=dict(title="Coin", tickangle=45),
     yaxis=dict(title="Multiplier", tickvals=['3x', '5x', '10x', '20x'], ticktext=['3x', '5x', '10x', '20x']),
     showlegend=False,
