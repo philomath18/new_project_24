@@ -61,9 +61,19 @@ fig_bar = px.bar(
     title="Percent Gain by Coin",
     labels={"percent_gain": "Percent Gain (%)"}
 )
-fig_bar.update_layout(coloraxis_colorbar=dict(title="Percent Gain"))
-st.plotly_chart(fig_bar, use_container_width=True)
 
+# Customize the color scale for continuous values
+fig_bar.update_traces(
+    marker=dict(
+        color=df['percent_gain'],  # Set the color based on percent_gain
+        colorscale='RdYlGn',  # Red-Yellow-Green color scale
+        colorbar=dict(title="Percent Gain"),  # Title for color bar
+        showscale=True  # Show the color scale bar
+    )
+)
+
+# Display the chart
+st.plotly_chart(fig_bar, use_container_width=True)
 ##### Multiplier Chart
 # Heatmap for Coin Multipliers
 # Heatmap for Coin Multipliers
