@@ -48,9 +48,11 @@ fig_bubble = px.scatter(
     text='coin', 
     title="Bubble Chart of Portfolio"
 )
-fig_bubble.update_traces(marker=dict(sizemode='diameter', line_width=2, opacity=0.6), textfont=dict(color='white', size=14))
-fig_bubble.update_traces(hovertemplate="<b>%{text}</b><br>Value: %{y:.0f} ₹<br>Coin: %{x}")
-
+fig_bubble.update_traces(
+    hovertemplate="<b>%{text}</b><br>Value: %{y:.0f} ₹<br>Coin: %{x}<extra></extra>",
+    marker=dict(sizemode='diameter', line_width=2, opacity=0.6),
+    textfont=dict(color='white', size=14)
+)
 # Plotting the bar chart
 st.subheader("Percent Gain by Coin")
 fig_bar = px.bar(
