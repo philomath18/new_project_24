@@ -67,6 +67,21 @@ st.plotly_chart(fig_bar)
 
 ##### multipler chart
 
+import pandas as pd
+import plotly.express as px
+import streamlit as st
+
+# Sample DataFrame (replace this with your actual data)
+data = {
+    'coin': ['BTC', 'ETH', 'XRP', 'LTC', 'SOL'],
+    '3x': [1, 1, 0, 1, 0],
+    '5x': [1, 0, 1, 0, 1],
+    '10x': [0, 1, 0, 1, 0],
+    '20x': [1, 0, 0, 0, 0]
+}
+
+df = pd.DataFrame(data)
+
 # Reshape data for the chart (melt the columns into long format)
 df_stack = df[['coin', '3x', '5x', '10x', '20x']].melt(id_vars='coin', var_name='Multiplier', value_name='Reached')
 
@@ -103,6 +118,37 @@ fig_simple.update_layout(
 
 # Show the chart in Streamlit
 st.plotly_chart(fig_simple)
+
+# Create stacked bar chart for debugging
+fig_stacked = px.bar(
+    df_stack_filtered,
+    x='coin',
+    y='Multiplier',
+    color='Multiplier',
+    title="Stacked Bar Chart of Multipliers by Coin",
+    color_discrete_sequence=px.colors.qualitative.Set3,
+    labels={'coin': 'Coin', 'Multiplier': 'Multiplier'},
+    text='Multiplier'
+)
+
+# Update layout for stacked bar chart
+fig_stacked.update_layout(
+    xaxis=dict(
+        title="Coin",
+        categoryorder='array', 
+        categoryarray=df['coin'].tolist()  # Ensuring the coin order is preserved
+    ),
+    yaxis=dict(
+        title="Multiplier",
+        tickvals=[3, 5, 10, 20],  # Set the tick values as the actual multipliers
+        ticktext=['3x', '5x', '10x', '20x']
+    ),
+    height=700, 
+    margin=dict(l=50, r=50, t=50, b=50),  
+)
+
+# Show the stacked chart in Streamlit
+st.plotly_chart(fig_stacked)
 
 #############    ######################
 # Reshape data for the chart (melt the columns into long format)
