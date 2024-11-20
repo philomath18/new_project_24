@@ -21,6 +21,7 @@ def load_data():
 df = load_data()
 
 df.loc[df['coin'] == 'USDT', 'prev_price'] = 1
+df.loc[df['coin'] == 'USDT', 'percent_gain'] = 0
 
 # Create a new column for INR-formatted values
 df['value'] = df['value'].astype(int)
