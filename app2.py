@@ -104,29 +104,42 @@ fig_simple.update_layout(
 # Show the chart in Streamlit
 st.plotly_chart(fig_simple)
 
+#############    ######################
+# Reshape data for the chart (melt the columns into long format)
+df_stack = df[['coin', '3x', '5x', '10x', '20x']].melt(id_vars='coin', var_name='Multiplier', value_name='Reached')
+
+# Inspect the reshaped data
+st.write("Reshaped Data:", df_stack)
+
+# Filter only where multiplier is reached (Reached == 1)
+df_stack_filtered = df_stack[df_stack['Reached'] == 1]
+
+# Inspect the filtered data
+st.write("Filtered Data (Reached == 1):", df_stack_filtered)
+
+# Pivot the data so that each multiplier is a separate column with 1s where it was reached
+df_pivot = df_stack_filtered.pivot_table(index='coin', columns='Multiplier', values='Reached', aggfunc='sum', fill_value=0)
+
+# Inspect the pivoted data
+st.write("Pivoted Data:", df_pivot)
+
 # Create stacked bar chart for debugging
 fig_stacked = px.bar(
-    df_stack_filtered,
-    x='coin',
-    y='Multiplier',
-    color='Multiplier',
+    df_pivot,
+    x=df_pivot.index,
+    y=df_pivot.columns,
     title="Stacked Bar Chart of Multipliers by Coin",
-    color_discrete_sequence=px.colors.qualitative.Set3,
-    labels={'coin': 'Coin', 'Multiplier': 'Multiplier'},
-    text='Multiplier'
+    labels={'coin': 'Coin', 'value': 'Multiplier'},
+    text_auto=True
 )
 
 # Update layout for stacked bar chart
 fig_stacked.update_layout(
     xaxis=dict(
         title="Coin",
-        categoryorder='array', 
-        categoryarray=df['coin'].tolist()  # Ensuring the coin order is preserved
     ),
     yaxis=dict(
-        title="Multiplier",
-        tickvals=[3, 5, 10, 20],  # Set the tick values as the actual multipliers
-        ticktext=['3x', '5x', '10x', '20x']
+        title="Count",
     ),
     height=700, 
     margin=dict(l=50, r=50, t=50, b=50),  
