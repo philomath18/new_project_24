@@ -66,10 +66,24 @@ fig_bar.update_layout(coloraxis_colorbar=dict(title="Percent Gain"))
 st.plotly_chart(fig_bar)
 
 ##### multipler chart
-# Reshape data for stacking (melt the dataframe)
+import pandas as pd
+import plotly.express as px
+
+# Sample DataFrame (replace with your actual data)
+data = {
+    'coin': ['BTC', 'ETH', 'XRP', 'LTC', 'SOL'],
+    '3x': [1, 1, 0, 1, 0],
+    '5x': [1, 0, 1, 0, 1],
+    '10x': [0, 1, 0, 1, 0],
+    '20x': [1, 0, 0, 0, 0]
+}
+
+df = pd.DataFrame(data)
+
+# Reshape data for the chart
 df_stack = df[['coin', '3x', '5x', '10x', '20x']].melt(id_vars='coin', var_name='Multiplier', value_name='Reached')
 
-# Only keep the rows where the multiplier is reached (i.e., where the value is 1)
+# Filter only where multiplier is reached (Reached == 1)
 df_stack = df_stack[df_stack['Reached'] == 1]
 
 # Define the order of multipliers
@@ -87,30 +101,26 @@ fig_stacked = px.bar(
     text='Multiplier'
 )
 
-# Update the layout for the color scale and axis
+# Update layout with proper colors and multiplier scale
 fig_stacked.update_traces(marker=dict(line=dict(width=1, color='white')))  # Optional: border color for bars
 fig_stacked.update_layout(
-    coloraxis=dict(
-        colorscale='Viridis',  # Choose an appropriate color scale
-        colorbar=dict(title="Multiplier Value", tickvals=[3, 5, 10, 20], ticktext=['3x', '5x', '10x', '20x'])
-    ),
     xaxis=dict(
         title="Coin",
         categoryorder='array',
-        categoryarray=df['coin'].tolist()  # Ensure coins are ordered based on input data
+        categoryarray=df['coin'].tolist()  # Order based on the input data
     ),
     yaxis=dict(
         title="Multiplier",
-        tickvals=[3, 5, 10, 20],  # Make sure multiplier values are shown as ticks
+        tickvals=[3, 5, 10, 20],  # Multiplier values as ticks on the y-axis
         ticktext=['3x', '5x', '10x', '20x']
     ),
     height=700,  # Adjust based on visualization
-    margin=dict(l=50, r=50, t=50, b=50)  # Adjust margins
+    margin=dict(l=50, r=50, t=50, b=50),  # Adjust margins
 )
 
 # Show the chart
+import streamlit as st
 st.plotly_chart(fig_stacked)
-
 
 ###############
 
