@@ -66,6 +66,7 @@ st.plotly_chart(fig_bar)
 
 ##### Multiplier Chart
 # Heatmap for Coin Multipliers
+# Heatmap for Coin Multipliers
 st.subheader("Multiplier Achievement Heatmap")
 
 # Reshape the DataFrame for heatmap input
@@ -81,18 +82,18 @@ df_heatmap['Multiplier'] = pd.Categorical(df_heatmap['Multiplier'], categories=m
 # Create the pivot table for the heatmap
 pivot_df = df_heatmap.pivot(index='coin', columns='Multiplier', values='Reached')
 
-# Create heatmap with a discrete color scale (using white for 0 and green for 1)
+# Create heatmap with a discrete color scale (using only 2 colors for 0 and 1)
 fig_heatmap = px.imshow(
     pivot_df,
     labels={'x': 'Multiplier', 'y': 'Coin', 'color': 'Reached'},
     title="Heatmap of Multiplier Achievement by Coin",
-    color_continuous_scale=['white', 'green'],  # White for 0 (Not Reached), Green for 1 (Reached)
-    height=800  # Set the height for the plot
+    color_continuous_scale=['red', 'green'],  # Discrete colors for 0 and 1
+    height=1200  # Fit all coins
 )
 
 # Set the color scale to be discrete with two values
 fig_heatmap.update_traces(
-    colorscale=[[0, 'white'], [1, 'green']],  # White for 0 (Not Reached), Green for 1 (Reached)
+    colorscale=[[0, 'white'], [1, 'green']],  # Red for 0 (Not Reached), Green for 1 (Reached)
     colorbar=dict(tickvals=[0, 1], ticktext=["Not Reached", "Reached"])  # Labels for 0 and 1
 )
 
@@ -105,18 +106,11 @@ fig_heatmap.update_layout(
     ),
     yaxis=dict(
         title="Coin"
-    ),
-    width=1000,  # Increase the width of the plot
-    height=600,  # Adjust the height as needed
-    margin=dict(l=50, r=50, t=50, b=50)  # Adjust margins for space on the sides
+    )
 )
 
-# Create a layout with columns to manage space for the chart
-col1, col2, col3 = st.columns([0.5, 2, 0.5])  # Adjust column widths as needed
-
-# Place the heatmap in the center column to control width
-with col2:
-    st.plotly_chart(fig_heatmap)  # This will be centered and have increased width
+# Show the heatmap
+st.plotly_chart(fig_heatmap)
 
 # Scatter Plot: Percent Gain vs Value
 st.subheader("Percent Gain vs Value")
