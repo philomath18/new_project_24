@@ -67,21 +67,6 @@ st.plotly_chart(fig_bar)
 
 ##### multipler chart
 
-import pandas as pd
-import plotly.express as px
-import streamlit as st
-
-# Sample DataFrame (replace this with your actual data)
-data = {
-    'coin': ['BTC', 'ETH', 'XRP', 'LTC', 'SOL'],
-    '3x': [1, 1, 0, 1, 0],
-    '5x': [1, 0, 1, 0, 1],
-    '10x': [0, 1, 0, 1, 0],
-    '20x': [1, 0, 0, 0, 0]
-}
-
-df = pd.DataFrame(data)
-
 # Reshape data for the chart (melt the columns into long format)
 df_stack = df[['coin', '3x', '5x', '10x', '20x']].melt(id_vars='coin', var_name='Multiplier', value_name='Reached')
 
