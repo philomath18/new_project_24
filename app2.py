@@ -51,16 +51,6 @@ fig_bubble = px.scatter(
 fig_bubble.update_traces(marker=dict(sizemode='diameter', line_width=2, opacity=0.6), textfont=dict(color='white', size=14))
 st.plotly_chart(fig_bubble, use_container_width=True)
 
-# Bar Chart for Percent Gain
-import streamlit as st
-import plotly.express as px
-import pandas as pd
-
-# Example DataFrame (replace with your actual data)
-df = pd.DataFrame({
-    'coin': ['Coin 1', 'Coin 2', 'Coin 3', 'Coin 4'],
-    'percent_gain': [-10, 15, -5, 30]
-})
 
 # Plotting the bar chart
 st.subheader("Percent Gain by Coin")
