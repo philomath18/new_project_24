@@ -68,32 +68,41 @@ st.plotly_chart(fig_bar)
 # Horizontal Bar Chart for Multiplier Progression
 st.subheader("Coins vs. Maximum Multiplier Reached")
 
-# Find the maximum multiplier achieved for each coin
-multiplier_map = {'3x': 3, '5x': 5, '10x': 10, '20x': 20}  # Map column names to numeric values
-df['max_multiplier'] = df[['3x', '5x', '10x', '20x']].dot([3, 5, 10, 20])  # Calculate max multiplier per coin
+# Map multiplier columns to numeric values for calculation
+multiplier_map = {'3x': 3, '5x': 5, '10x': 10, '20x': 20}
+
+# Calculate the max multiplier reached for each coin
+df['max_multiplier'] = df[['3x', '5x', '10x', '20x']].dot([3, 5, 10, 20])  
+
+# Sort the DataFrame by maximum multiplier for better visualization
+df_sorted = df.sort_values('max_multiplier', ascending=True)
 
 # Create the horizontal bar chart
 fig_horizontal = px.bar(
-    df.sort_values('max_multiplier', ascending=True),  # Sort coins by max multiplier
-    y='coin',  # Coins on Y-axis
-    x='max_multiplier',  # Multiplier values on X-axis
-    orientation='h',  # Horizontal bars
+    df_sorted,  # Use the sorted DataFrame
+    y='coin',  # Coins on the Y-axis
+    x='max_multiplier',  # Maximum multiplier on the X-axis
+    orientation='h',  # Horizontal bar chart
     title="Maximum Multiplier Reached by Each Coin",
-    color='max_multiplier',  # Use a color gradient based on max multiplier
-    color_continuous_scale=px.colors.sequential.Viridis,  # Modern color palette
-    labels={'coin': 'Coin', 'max_multiplier': 'Maximum Multiplier'},
-    text='max_multiplier'  # Display max multiplier as text on the bars
+    color='max_multiplier',  # Use a gradient color scale based on the multiplier
+    color_continuous_scale=px.colors.sequential.Viridis,  # Modern gradient color palette
+    labels={'coin': 'Coin', 'max_multiplier': 'Maximum Multiplier'},  # Custom axis labels
+    text='max_multiplier'  # Show the multiplier as text on the bars
 )
 
-# Customize layout for clarity
+# Customize layout for better visibility
 fig_horizontal.update_layout(
-    xaxis=dict(title="Multiplier Value"),  # X-axis title
-    yaxis=dict(title="Coin", automargin=True),  # Y-axis title
+    xaxis=dict(title="Multiplier Value"),  # Title for X-axis
+    yaxis=dict(title="Coin", automargin=True),  # Ensure coin names fit
     coloraxis_colorbar=dict(title="Multiplier"),  # Colorbar title
-    height=800  # Adjust height for better readability
+    height=1200,  # Dynamically increase height to fit 70 coins
+    margin=dict(l=200, r=50, t=50, b=50)  # Increase left margin for long coin names
 )
 
-# Show the chart
+# Customize bar text to ensure clarity
+fig_horizontal.update_traces(textposition='inside', textfont_size=12)
+
+# Show the updated chart in Streamlit
 st.plotly_chart(fig_horizontal)
 
 # Scatter Plot: Percent Gain vs Value
