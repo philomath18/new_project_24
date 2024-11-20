@@ -21,6 +21,7 @@ def load_data():
 df = load_data()
 
 # Create a new column for INR-formatted values
+df['value'] = df['value'].astype(int)
 df['value_inr'] = df['value'].apply(lambda x: "{:,.0f}".format(x))
 
 # Calculate the total portfolio value
