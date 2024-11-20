@@ -30,13 +30,13 @@ total_initial_value = df['value_initial'].sum()
 df['value'] = df['value'].astype(int)
 df['value_inr'] = df['value'].apply(lambda x: "{:,.0f}".format(x))
 
-st.markdown(f"<h3 style='text-align: right; font-weight: bold;'>check: {total_initial_value}</h3>", unsafe_allow_html=True)
+#st.markdown(f"<h3 style='text-align: right; font-weight: bold;'>check: {total_initial_value}</h3>", unsafe_allow_html=True)
 
 # Calculate the total portfolio value
 total_value = df['value'].sum()
 total_value_inr = "₹{:,.0f}".format(total_value)
 
-percent_gain_portfolio = (total_value-df['value_initial'].sum())*100/df['value_initial'].sum()
+percent_gain_portfolio = (total_value-total_initial_value)*100/total_initial_value
 
 # Streamlit app layout
 st.title("Crypto Portfolio Tracker")
