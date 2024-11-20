@@ -49,7 +49,7 @@ fig_bubble = px.scatter(
     title="Bubble Chart of Portfolio"
 )
 fig_bubble.update_traces(marker=dict(sizemode='diameter', line_width=2, opacity=0.6), textfont=dict(color='white', size=14))
-st.plotly_chart(fig_bubble)
+st.plotly_chart(fig_bubble, use_container_width=True)
 
 # Bar Chart for Percent Gain
 st.subheader("Percent Gain by Coin")
@@ -62,7 +62,7 @@ fig_bar = px.bar(
     labels={"percent_gain": "Percent Gain (%)"}
 )
 fig_bar.update_layout(coloraxis_colorbar=dict(title="Percent Gain"))
-st.plotly_chart(fig_bar)
+st.plotly_chart(fig_bar, use_container_width=True)
 
 ##### Multiplier Chart
 # Heatmap for Coin Multipliers
@@ -110,7 +110,7 @@ fig_heatmap.update_layout(
 )
 
 # Show the heatmap
-st.plotly_chart(fig_heatmap)
+st.plotly_chart(fig_heatmap, use_container_width=True)
 
 # Scatter Plot: Percent Gain vs Value
 st.subheader("Percent Gain vs Value")
@@ -124,4 +124,4 @@ fig_scatter = px.scatter(
     title="Percent Gain vs Portfolio Value",
     labels={"percent_gain": "Percent Gain (%)", "value": "Value (₹)"}
 )
-st.plotly_chart(fig_scatter)
+st.plotly_chart(fig_scatter, use_container_width=True)
