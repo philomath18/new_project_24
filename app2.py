@@ -73,8 +73,11 @@ df_stack = df[['coin', '3x', '5x', '10x', '20x']].melt(id_vars='coin', var_name=
 # Filter only where multiplier is reached (Reached == 1)
 df_stack = df_stack[df_stack['Reached'] == 1]
 
-# Define the order of multipliers
+# Set order of multipliers for y-axis (3x, 5x, 10x, 20x)
 multiplier_order = ['3x', '5x', '10x', '20x']
+
+# Ensure the multiplier column has the correct order
+df_stack['Multiplier'] = pd.Categorical(df_stack['Multiplier'], categories=multiplier_order, ordered=True)
 
 # Create stacked bar chart
 fig_stacked = px.bar(
@@ -88,27 +91,24 @@ fig_stacked = px.bar(
     text='Multiplier'
 )
 
-# Update layout with proper colors and multiplier scale
-fig_stacked.update_traces(marker=dict(line=dict(width=1, color='white')))  # Optional: border color for bars
+# Update layout with correct multipliers on the y-axis
 fig_stacked.update_layout(
     xaxis=dict(
         title="Coin",
-        categoryorder='array',
-        categoryarray=df['coin'].tolist()  # Order based on the input data
+        categoryorder='array', 
+        categoryarray=df['coin'].tolist()  # Ensuring the coin order is preserved
     ),
     yaxis=dict(
         title="Multiplier",
-        tickvals=[3, 5, 10, 20],  # Multiplier values as ticks on the y-axis
+        tickvals=[3, 5, 10, 20],  # Set the tick values as the actual multipliers
         ticktext=['3x', '5x', '10x', '20x']
     ),
     height=700,  # Adjust based on visualization
     margin=dict(l=50, r=50, t=50, b=50),  # Adjust margins
 )
 
-# Show the chart
-import streamlit as st
+# Show the chart in Streamlit
 st.plotly_chart(fig_stacked)
-
 ###############
 
 
