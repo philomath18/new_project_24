@@ -49,8 +49,7 @@ fig_bubble = px.scatter(
     title="Bubble Chart of Portfolio"
 )
 fig_bubble.update_traces(marker=dict(sizemode='diameter', line_width=2, opacity=0.6), textfont=dict(color='white', size=14))
-st.plotly_chart(fig_bubble, use_container_width=True)
-
+fig_bubble.update_traces(hovertemplate="<b>%{text}</b><br>Value: %{y:.0f} ₹<br>Coin: %{x}")
 
 # Plotting the bar chart
 st.subheader("Percent Gain by Coin")
@@ -76,6 +75,7 @@ fig_bar.update_traces(
 )
 
 # Display the chart
+fig_scatter.update_traces(hovertemplate="<b>%{text}</b><br>Percent Gain: %{x:.0f}%<br>Value: %{y:.0f} ₹")
 st.plotly_chart(fig_bar, use_container_width=True)
 
 ##### Multiplier Chart
@@ -138,6 +138,7 @@ fig_scatter = px.scatter(
     title="Percent Gain vs Portfolio Value",
     labels={"percent_gain": "Percent Gain (%)", "value": "Value (₹)"}
 )
+fig_scatter.update_traces(hovertemplate="<b>%{text}</b><br>Percent Gain: %{x:.0f}%<br>Value: %{y:.0f} ₹")
 st.plotly_chart(fig_scatter, use_container_width=True)
 
 
