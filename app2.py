@@ -65,69 +65,38 @@ fig_bar = px.bar(
 fig_bar.update_layout(coloraxis_colorbar=dict(title="Percent Gain"))
 st.plotly_chart(fig_bar)
 
-# Horizontal Bar Chart for Multiplier Progression
-st.subheader("Coins vs. Maximum Multiplier Reached")
+# Reshape data for heatmap
+df_melted = df.melt(id_vars='coin', var_name='Multiplier', value_name='Reached')
 
-# Map multiplier columns to numeric values for calculation
-multiplier_map = {'3x': 3, '5x': 5, '10x': 10, '20x': 20}
+# Replace multiplier names to ensure they are in the correct order
+df_melted['Multiplier'] = pd.Categorical(df_melted['Multiplier'], categories=['3x', '5x', '10x', '20x'], ordered=True)
 
-# Calculate the max multiplier reached for each coin
-df['max_multiplier'] = df[['3x', '5x', '10x', '20x']].dot([3, 5, 10, 20])  
+# Adjust 'Reached' values to match the multipliers for the color scale
+df_melted['Reached'] = df_melted['Multiplier'].str.extract(r'(\d+)').astype(int)['Multiplier'] * df_melted['Reached']
 
-# Sort the DataFrame by maximum multiplier for better visualization
-df_sorted = df.sort_values('max_multiplier', ascending=True)
-
-# Create the horizontal bar chart
-fig_horizontal = px.bar(
-    df_sorted,  # Use the sorted DataFrame
-    y='coin',  # Coins on the Y-axis
-    x='max_multiplier',  # Maximum multiplier on the X-axis
-    orientation='h',  # Horizontal bar chart
-    title="Maximum Multiplier Reached by Each Coin",
-    color='max_multiplier',  # Use a gradient color scale based on the multiplier
-    color_continuous_scale=px.colors.sequential.Viridis,  # Modern gradient color palette
-    labels={'coin': 'Coin', 'max_multiplier': 'Maximum Multiplier'},  # Custom axis labels
-    text='max_multiplier'  # Show the multiplier as text on the bars
-)
-
-# Customize layout for better visibility
-fig_horizontal.update_layout(
-    xaxis=dict(title="Multiplier Value"),  # Title for X-axis
-    yaxis=dict(title="Coin", automargin=True),  # Ensure coin names fit
-    coloraxis_colorbar=dict(title="Multiplier"),  # Colorbar title
-    height=1200,  # Dynamically increase height to fit 70 coins
-    margin=dict(l=200, r=50, t=50, b=50)  # Increase left margin for long coin names
-)
-
-# Customize bar text to ensure clarity
-fig_horizontal.update_traces(textposition='inside', textfont_size=12)
-
-# Show the updated chart in Streamlit
-st.plotly_chart(fig_horizontal)
-
-###################
-# Heatmap for Coin Multipliers
-st.subheader("Multiplier Achievement Heatmap")
-
-# Reshape the DataFrame for heatmap input
-df_heatmap = df[['coin', '3x', '5x', '10x', '20x']].melt(id_vars='coin', var_name='Multiplier', value_name='Reached')
-
-# Replace 'Reached' with numeric values (0 for not reached, 1 for reached)
-df_heatmap['Reached'] = df_heatmap['Reached'].apply(lambda x: 1 if x == 1 else 0)
-
-# Create heatmap
-fig_heatmap = px.imshow(
-    df_heatmap.pivot(index='coin', columns='Multiplier', values='Reached'),
-    labels={'x': 'Multiplier', 'y': 'Coin', 'color': 'Reached'},
-    color_continuous_scale='Viridis',
+# Create the heatmap
+fig = px.imshow(
+    df.pivot(index='coin', columns='Multiplier', values='Reached'),
+    labels={'x': 'Multiplier', 'y': 'Coin', 'color': 'Multiplier'},
     title="Heatmap of Multiplier Achievement by Coin",
-    height=1200  # Fit all coins
+    color_continuous_scale=px.colors.sequential.Viridis,
 )
 
-# Show the heatmap
-st.plotly_chart(fig_heatmap)
+# Update layout for larger width and custom color legend
+fig.update_layout(
+    xaxis=dict(title="Multiplier", tickmode='linear', automargin=True),
+    yaxis=dict(title="Coin", automargin=True),
+    height=1000,
+    width=1000,  # Increase width for better visibility
+    coloraxis_colorbar=dict(
+        title="Multiplier",
+        tickvals=[3, 5, 10, 20],  # Only show relevant values in the color bar
+        ticktext=['3x', '5x', '10x', '20x'],
+    )
+)
 
-
+# Show the updated heatmap
+fig.show()
 
 
 ###############
