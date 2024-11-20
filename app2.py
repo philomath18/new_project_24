@@ -24,10 +24,13 @@ df.loc[df['coin'] == 'USDT', 'prev_price'] = 1
 df.loc[df['coin'] == 'USDT', 'percent_gain'] = 0
 
 df['value_initial'] = df['prev_price']*df['qty']
+total_initial_value = df['value_initial'].sum()
 
 # Create a new column for INR-formatted values
 df['value'] = df['value'].astype(int)
 df['value_inr'] = df['value'].apply(lambda x: "{:,.0f}".format(x))
+
+st.markdown(f"<h3 style='text-align: right; font-weight: bold;'>check: {total_initial_value}</h3>", unsafe_allow_html=True)
 
 # Calculate the total portfolio value
 total_value = df['value'].sum()
