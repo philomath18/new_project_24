@@ -21,7 +21,7 @@ def load_data():
 df = load_data()
 
 # Create a new column for INR-formatted values
-df['value_inr'] = df['value'].apply(lambda x: "₹{:,.0f}".format(x))
+df['value_inr'] = df['value'].apply(lambda x: "{:,.0f}".format(x))
 
 # Calculate the total portfolio value
 total_value = df['value'].sum()
