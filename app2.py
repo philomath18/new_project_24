@@ -87,7 +87,7 @@ fig_heatmap = px.imshow(
     pivot_df,
     labels={'x': 'Multiplier', 'y': 'Coin', 'color': 'Reached'},
     title="Heatmap of Multiplier Achievement by Coin",
-    color_continuous_scale=['red', 'green'],  # Discrete colors for 0 and 1
+    color_continuous_scale=['white', 'green'],  # Discrete colors for 0 and 1
     height=1200  # Fit all coins
 )
 
