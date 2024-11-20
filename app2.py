@@ -53,7 +53,7 @@ fig_bubble.update_traces(marker=dict(sizemode='diameter', line_width=2, opacity=
 st.plotly_chart(fig_bubble, use_container_width=True)
 
 
-df['percent_gain'] = df['percent_gain'].apply(lambda x: "{:,.0f}".format(x))
+df['percent_gain'] = df['percent_gain'].astype(int)
 
 # Plotting the bar chart
 st.subheader("Percent Gain by Coin")
@@ -134,8 +134,8 @@ st.subheader("Percent Gain vs Value")
 fig_scatter = px.scatter(
     df, 
     x='percent_gain', 
-    y='value_inr', 
-    size='value_inr', 
+    y='value', 
+    size='value', 
     color='coin', 
     hover_name='coin', 
     title="Percent Gain vs Portfolio Value",
