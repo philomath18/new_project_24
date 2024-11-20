@@ -67,21 +67,61 @@ st.plotly_chart(fig_bar)
 
 ##### multipler chart
 
-# Reshape data for the chart
+import pandas as pd
+import plotly.express as px
+import streamlit as st
+
+# Sample DataFrame (replace this with your actual data)
+data = {
+    'coin': ['BTC', 'ETH', 'XRP', 'LTC', 'SOL'],
+    '3x': [1, 1, 0, 1, 0],
+    '5x': [1, 0, 1, 0, 1],
+    '10x': [0, 1, 0, 1, 0],
+    '20x': [1, 0, 0, 0, 0]
+}
+
+df = pd.DataFrame(data)
+
+# Reshape data for the chart (melt the columns into long format)
 df_stack = df[['coin', '3x', '5x', '10x', '20x']].melt(id_vars='coin', var_name='Multiplier', value_name='Reached')
 
+# Inspect the reshaped data
+st.write("Reshaped Data:", df_stack)
+
 # Filter only where multiplier is reached (Reached == 1)
-df_stack = df_stack[df_stack['Reached'] == 1]
+df_stack_filtered = df_stack[df_stack['Reached'] == 1]
+
+# Inspect the filtered data
+st.write("Filtered Data (Reached == 1):", df_stack_filtered)
 
 # Set order of multipliers for y-axis (3x, 5x, 10x, 20x)
 multiplier_order = ['3x', '5x', '10x', '20x']
 
 # Ensure the multiplier column has the correct order
-df_stack['Multiplier'] = pd.Categorical(df_stack['Multiplier'], categories=multiplier_order, ordered=True)
+df_stack_filtered['Multiplier'] = pd.Categorical(df_stack_filtered['Multiplier'], categories=multiplier_order, ordered=True)
 
-# Create stacked bar chart
+# Create a simple bar chart to see the counts of multipliers per coin
+fig_simple = px.bar(
+    df_stack_filtered,
+    x='coin',
+    color='Multiplier',
+    title="Bar Chart of Multipliers Reached by Coin",
+    labels={'coin': 'Coin', 'Multiplier': 'Multiplier'},
+    text='Multiplier'
+)
+
+# Update layout
+fig_simple.update_layout(
+    height=600, 
+    margin=dict(l=50, r=50, t=50, b=50),  
+)
+
+# Show the chart in Streamlit
+st.plotly_chart(fig_simple)
+
+# Create stacked bar chart for debugging
 fig_stacked = px.bar(
-    df_stack,
+    df_stack_filtered,
     x='coin',
     y='Multiplier',
     color='Multiplier',
@@ -91,7 +131,7 @@ fig_stacked = px.bar(
     text='Multiplier'
 )
 
-# Update layout with correct multipliers on the y-axis
+# Update layout for stacked bar chart
 fig_stacked.update_layout(
     xaxis=dict(
         title="Coin",
@@ -103,11 +143,11 @@ fig_stacked.update_layout(
         tickvals=[3, 5, 10, 20],  # Set the tick values as the actual multipliers
         ticktext=['3x', '5x', '10x', '20x']
     ),
-    height=700,  # Adjust based on visualization
-    margin=dict(l=50, r=50, t=50, b=50),  # Adjust margins
+    height=700, 
+    margin=dict(l=50, r=50, t=50, b=50),  
 )
 
-# Show the chart in Streamlit
+# Show the stacked chart in Streamlit
 st.plotly_chart(fig_stacked)
 ###############
 
