@@ -24,7 +24,7 @@ df.loc[df['coin'] == 'USDT', 'prev_price'] = 1
 df.loc[df['coin'] == 'USDT', 'percent_gain'] = 0
 
 df['value_initial'] = df['prev_price']*df['qty']
-total_initial_value = df['value_initial'].sum()
+total_initial_value = df['value_initial'].sum()*90
 
 # Create a new column for INR-formatted values
 df['value'] = df['value'].astype(int)
@@ -36,13 +36,13 @@ df['value_inr'] = df['value'].apply(lambda x: "{:,.0f}".format(x))
 total_value = df['value'].sum()
 total_value_inr = "₹{:,.0f}".format(total_value)
 
-#percent_gain_portfolio = (total_value-total_initial_value)*100/total_initial_value
+percent_gain_portfolio = (total_value-total_initial_value)*100/total_initial_value
 
 # Streamlit app layout
 st.title("Crypto Portfolio Tracker")
 st.markdown(f"<h3 style='text-align: right; font-weight: bold;'>Total Portfolio Value: {total_value_inr}</h3>", unsafe_allow_html=True)
 
-st.markdown(f"<h3 style='text-align: right; font-weight: bold;'>Total Portfolio Gain: {percent_gain_portfolio}</h3>", unsafe_allow_html=True)
+st.markdown(f"<h3 style='text-align: right; font-weight: bold;'>Total Portfolio Gain: {percent_gain_portfolio+'%'}</h3>", unsafe_allow_html=True)
 
 st.write("This dashboard shows your crypto portfolio performance.")
 
