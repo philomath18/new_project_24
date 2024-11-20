@@ -5,7 +5,6 @@ import requests
 import io
 
 # Define a function to fetch and load the latest data
-#@st.cache(ttl=3600)
 def load_data():
     file_id = "1cwZLxlaob5P40ijaGf4U3Rqc4ERwVYI6"
     file_url = f"https://drive.google.com/uc?id={file_id}"
@@ -65,19 +64,13 @@ fig_bar = px.bar(
 fig_bar.update_layout(coloraxis_colorbar=dict(title="Percent Gain"))
 st.plotly_chart(fig_bar)
 
-##### multipler chart
+##### Multiplier Chart
 
 # Reshape data for the chart (melt the columns into long format)
 df_stack = df[['coin', '3x', '5x', '10x', '20x']].melt(id_vars='coin', var_name='Multiplier', value_name='Reached')
 
-# Inspect the reshaped data
-st.write("Reshaped Data:", df_stack)
-
 # Filter only where multiplier is reached (Reached == 1)
 df_stack_filtered = df_stack[df_stack['Reached'] == 1]
-
-# Inspect the filtered data
-st.write("Filtered Data (Reached == 1):", df_stack_filtered)
 
 # Set order of multipliers for y-axis (3x, 5x, 10x, 20x)
 multiplier_order = ['3x', '5x', '10x', '20x']
@@ -85,26 +78,13 @@ multiplier_order = ['3x', '5x', '10x', '20x']
 # Ensure the multiplier column has the correct order
 df_stack_filtered['Multiplier'] = pd.Categorical(df_stack_filtered['Multiplier'], categories=multiplier_order, ordered=True)
 
-# Create a simple bar chart to see the counts of multipliers per coin
-fig_simple = px.bar(
-    df_stack_filtered,
-    x='coin',
-    color='Multiplier',
-    title="Bar Chart of Multipliers Reached by Coin",
-    labels={'coin': 'Coin', 'Multiplier': 'Multiplier'},
-    text='Multiplier'
+# Calculate the value at the 3x multiplier (3 * initial_price * qty)
+df_stack_filtered['value_at_3x'] = df_stack_filtered.apply(
+    lambda row: 3 * df[df['coin'] == row['coin']]['initial_price'].values[0] * df[df['coin'] == row['coin']]['quantity'].values[0] if row['Multiplier'] == '3x' else 0,
+    axis=1
 )
 
-# Update layout
-fig_simple.update_layout(
-    height=600, 
-    margin=dict(l=50, r=50, t=50, b=50),  
-)
-
-# Show the chart in Streamlit
-st.plotly_chart(fig_simple)
-
-# Create stacked bar chart for debugging
+# Create the stacked bar chart with the calculated value in the center
 fig_stacked = px.bar(
     df_stack_filtered,
     x='coin',
@@ -114,6 +94,14 @@ fig_stacked = px.bar(
     color_discrete_sequence=px.colors.qualitative.Set3,
     labels={'coin': 'Coin', 'Multiplier': 'Multiplier'},
     text='Multiplier'
+)
+
+# Add value_at_3x in the center of each bar for 3x multiplier
+fig_stacked.update_traces(
+    texttemplate='%{text}',  # Add multiplier value in the center of the bars
+    textposition='inside',
+    insidetextanchor='middle',
+    textfont=dict(size=14, color='white', family='Arial', weight='bold')
 )
 
 # Update layout for stacked bar chart
@@ -134,52 +122,6 @@ fig_stacked.update_layout(
 
 # Show the stacked chart in Streamlit
 st.plotly_chart(fig_stacked)
-
-#############    ######################
-# Reshape data for the chart (melt the columns into long format)
-df_stack = df[['coin', '3x', '5x', '10x', '20x']].melt(id_vars='coin', var_name='Multiplier', value_name='Reached')
-
-# Inspect the reshaped data
-st.write("Reshaped Data:", df_stack)
-
-# Filter only where multiplier is reached (Reached == 1)
-df_stack_filtered = df_stack[df_stack['Reached'] == 1]
-
-# Inspect the filtered data
-st.write("Filtered Data (Reached == 1):", df_stack_filtered)
-
-# Pivot the data so that each multiplier is a separate column with 1s where it was reached
-df_pivot = df_stack_filtered.pivot_table(index='coin', columns='Multiplier', values='Reached', aggfunc='sum', fill_value=0)
-
-# Inspect the pivoted data
-st.write("Pivoted Data:", df_pivot)
-
-# Create stacked bar chart for debugging
-fig_stacked = px.bar(
-    df_pivot,
-    x=df_pivot.index,
-    y=df_pivot.columns,
-    title="Stacked Bar Chart of Multipliers by Coin",
-    labels={'coin': 'Coin', 'value': 'Multiplier'},
-    text_auto=True
-)
-
-# Update layout for stacked bar chart
-fig_stacked.update_layout(
-    xaxis=dict(
-        title="Coin",
-    ),
-    yaxis=dict(
-        title="Count",
-    ),
-    height=700, 
-    margin=dict(l=50, r=50, t=50, b=50),  
-)
-
-# Show the stacked chart in Streamlit
-st.plotly_chart(fig_stacked)
-###############
-
 
 # Scatter Plot: Percent Gain vs Value
 st.subheader("Percent Gain vs Value")
