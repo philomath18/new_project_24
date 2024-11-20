@@ -107,11 +107,13 @@ fig_heatmap.update_layout(
     yaxis=dict(
         title="Coin"
     ),
-    width=1000  # Increase the width of the plot (adjust as needed)
+    width=2000,  # Increase the width of the plot (adjusted width)
+    height=800,  # Adjust the height as needed
+    margin=dict(l=100, r=100, t=50, b=50)  # Adjust margins for space on the sides
 )
 
-# Show the heatmap
-st.plotly_chart(fig_heatmap)
+# Show the heatmap with specific width settings
+st.plotly_chart(fig_heatmap, use_container_width=False)  # False allows for manual width control
 
 # Scatter Plot: Percent Gain vs Value
 st.subheader("Percent Gain vs Value")
