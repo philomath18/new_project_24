@@ -7,7 +7,7 @@ import io
 # Define a function to fetch and load the latest data
 @st.cache(ttl=3600)
 def load_data():
-    file_id = "1cwZLxlaob5P40ijaGf4U3Rqc4ERwVYI6"
+    file_id = "1W3wyUzLnEuItWNS5Jjg6E5GUdnNpVdIT"
     file_url = f"https://drive.google.com/uc?id={file_id}"
     response = requests.get(file_url)
     response.raise_for_status()
