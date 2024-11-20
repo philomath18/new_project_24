@@ -52,6 +52,17 @@ fig_bubble.update_traces(marker=dict(sizemode='diameter', line_width=2, opacity=
 st.plotly_chart(fig_bubble, use_container_width=True)
 
 # Bar Chart for Percent Gain
+import streamlit as st
+import plotly.express as px
+import pandas as pd
+
+# Example DataFrame (replace with your actual data)
+df = pd.DataFrame({
+    'coin': ['Coin 1', 'Coin 2', 'Coin 3', 'Coin 4'],
+    'percent_gain': [-10, 15, -5, 30]
+})
+
+# Plotting the bar chart
 st.subheader("Percent Gain by Coin")
 fig_bar = px.bar(
     df, 
@@ -59,21 +70,24 @@ fig_bar = px.bar(
     y='percent_gain', 
     color='percent_gain', 
     title="Percent Gain by Coin",
-    labels={"percent_gain": "Percent Gain (%)"}
+    labels={"percent_gain": "Percent Gain (%)"},
+    color_continuous_scale='RdYlGn'  # Set continuous color scale from red to green
 )
 
-# Customize the color scale for continuous values
+# Customize the color scale range to center around 0 for better visual effect
 fig_bar.update_traces(
     marker=dict(
         color=df['percent_gain'],  # Set the color based on percent_gain
-        colorscale='RdYlGn',  # Red-Yellow-Green color scale
-        colorbar=dict(title="Percent Gain"),  # Title for color bar
-        showscale=True  # Show the color scale bar
+        colorbar=dict(
+            title="Percent Gain",
+            tickvals=[-10, -5, 0, 5, 10, 15, 20],  # Custom ticks for the color scale
+        )
     )
 )
 
 # Display the chart
 st.plotly_chart(fig_bar, use_container_width=True)
+
 ##### Multiplier Chart
 # Heatmap for Coin Multipliers
 # Heatmap for Coin Multipliers
