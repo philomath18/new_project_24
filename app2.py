@@ -66,62 +66,32 @@ st.plotly_chart(fig_bar)
 
 ##### Multiplier Chart
 
-# Reshape data for the chart (melt the columns into long format)
-df_stack = df[['coin', '3x', '5x', '10x', '20x']].melt(id_vars='coin', var_name='Multiplier', value_name='Reached')
+# Heatmap for Coin Multipliers
+st.subheader("Multiplier Achievement Heatmap")
 
-# Filter only where multiplier is reached (Reached == 1)
-df_stack_filtered = df_stack[df_stack['Reached'] == 1]
+# Reshape the DataFrame for heatmap input
+df_heatmap = df[['coin', '3x', '5x', '10x', '20x']].melt(id_vars='coin', var_name='Multiplier', value_name='Reached')
 
-# Set order of multipliers for y-axis (3x, 5x, 10x, 20x)
-multiplier_order = ['3x', '5x', '10x', '20x']
+# Replace 'Reached' with numeric values (0 for not reached, 1 for reached)
+df_heatmap['Reached'] = df_heatmap['Reached'].apply(lambda x: 1 if x == 1 else 0)
 
-# Ensure the multiplier column has the correct order
-df_stack_filtered['Multiplier'] = pd.Categorical(df_stack_filtered['Multiplier'], categories=multiplier_order, ordered=True)
-
-# Calculate the value at the 3x multiplier (3 * initial_price * qty)
-df_stack_filtered['value_at_3x'] = df_stack_filtered.apply(
-    lambda row: 3 * df[df['coin'] == row['coin']]['prev_price'].values[0] * df[df['coin'] == row['coin']]['qty'].values[0] if row['Multiplier'] == '3x' else 0,
-    axis=1
+# Create heatmap with a discrete color scale
+fig_heatmap = px.imshow(
+    df_heatmap.pivot(index='coin', columns='Multiplier', values='Reached'),
+    labels={'x': 'Multiplier', 'y': 'Coin', 'color': 'Reached'},
+    color_continuous_scale='Viridis',  # We will overwrite this below
+    title="Heatmap of Multiplier Achievement by Coin",
+    height=1200  # Fit all coins
 )
 
-# Create the stacked bar chart with the calculated value in the center
-fig_stacked = px.bar(
-    df_stack_filtered,
-    x='coin',
-    y='Multiplier',
-    color='Multiplier',
-    title="Stacked Bar Chart of Multipliers by Coin",
-    color_discrete_sequence=px.colors.qualitative.Set3,
-    labels={'coin': 'Coin', 'Multiplier': 'Multiplier'},
-    text='Multiplier'
+# Use a discrete color scale with just 4 colors
+fig_heatmap.update_traces(
+    colorscale=[[0, 'red'], [0.33, 'yellow'], [0.66, 'green'], [1, 'blue']],  # Define 4 distinct colors
+    colorbar=dict(tickvals=[0, 1], ticktext=["Not Reached", "Reached"])  # Add labels for 0 and 1
 )
 
-# Add value_at_3x in the center of each bar for 3x multiplier
-fig_stacked.update_traces(
-    texttemplate='%{text}',  # Add multiplier value in the center of the bars
-    textposition='inside',
-    insidetextanchor='middle',
-    textfont=dict(size=14, color='white', family='Arial', weight='bold')
-)
-
-# Update layout for stacked bar chart
-fig_stacked.update_layout(
-    xaxis=dict(
-        title="Coin",
-        categoryorder='array', 
-        categoryarray=df['coin'].tolist()  # Ensuring the coin order is preserved
-    ),
-    yaxis=dict(
-        title="Multiplier",
-        tickvals=[3, 5, 10, 20],  # Set the tick values as the actual multipliers
-        ticktext=['3x', '5x', '10x', '20x']
-    ),
-    height=700, 
-    margin=dict(l=50, r=50, t=50, b=50),  
-)
-
-# Show the stacked chart in Streamlit
-st.plotly_chart(fig_stacked)
+# Show the heatmap
+st.plotly_chart(fig_heatmap)
 
 # Scatter Plot: Percent Gain vs Value
 st.subheader("Percent Gain vs Value")
