@@ -80,7 +80,7 @@ df_stack_filtered['Multiplier'] = pd.Categorical(df_stack_filtered['Multiplier']
 
 # Calculate the value at the 3x multiplier (3 * initial_price * qty)
 df_stack_filtered['value_at_3x'] = df_stack_filtered.apply(
-    lambda row: 3 * df[df['coin'] == row['coin']]['initial_price'].values[0] * df[df['coin'] == row['coin']]['quantity'].values[0] if row['Multiplier'] == '3x' else 0,
+    lambda row: 3 * df[df['coin'] == row['coin']]['prev_price'].values[0] * df[df['coin'] == row['coin']]['qty'].values[0] if row['Multiplier'] == '3x' else 0,
     axis=1
 )
 
