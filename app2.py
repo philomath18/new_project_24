@@ -67,6 +67,7 @@ st.plotly_chart(fig_bar)
 ##### Multiplier Chart
 
 # Heatmap for Coin Multipliers
+# Heatmap for Coin Multipliers
 st.subheader("Multiplier Achievement Heatmap")
 
 # Reshape the DataFrame for heatmap input
@@ -75,19 +76,31 @@ df_heatmap = df[['coin', '3x', '5x', '10x', '20x']].melt(id_vars='coin', var_nam
 # Replace 'Reached' with numeric values (0 for not reached, 1 for reached)
 df_heatmap['Reached'] = df_heatmap['Reached'].apply(lambda x: 1 if x == 1 else 0)
 
+# Ensure the 'Multiplier' column has the correct order (3x, 5x, 10x, 20x)
+multiplier_order = ['3x', '5x', '10x', '20x']
+df_heatmap['Multiplier'] = pd.Categorical(df_heatmap['Multiplier'], categories=multiplier_order, ordered=True)
+
 # Create heatmap with a discrete color scale
 fig_heatmap = px.imshow(
     df_heatmap.pivot(index='coin', columns='Multiplier', values='Reached'),
     labels={'x': 'Multiplier', 'y': 'Coin', 'color': 'Reached'},
-    color_continuous_scale='Viridis',  # We will overwrite this below
     title="Heatmap of Multiplier Achievement by Coin",
     height=1200  # Fit all coins
 )
 
-# Use a discrete color scale with just 4 colors
+# Set the color scale to be discrete (just 2 colors for 0 and 1)
 fig_heatmap.update_traces(
-    colorscale=[[0, 'red'], [0.33, 'yellow'], [0.66, 'green'], [1, 'blue']],  # Define 4 distinct colors
+    colorscale=[[0, 'red'], [1, 'green']],  # Red for 0 (Not Reached), Green for 1 (Reached)
     colorbar=dict(tickvals=[0, 1], ticktext=["Not Reached", "Reached"])  # Add labels for 0 and 1
+)
+
+# Update x-axis to use the specified order of multipliers
+fig_heatmap.update_layout(
+    xaxis=dict(
+        title="Multiplier",
+        categoryorder='array',  # Ensuring the x-axis is ordered
+        categoryarray=multiplier_order  # Explicit order for x-axis categories
+    )
 )
 
 # Show the heatmap
