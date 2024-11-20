@@ -21,11 +21,11 @@ def load_data():
 df = load_data()
 
 # Create a new column for INR-formatted values
-df['value_inr'] = df['value'].apply(lambda x: "₹{:,.2f}".format(x))
+df['value_inr'] = df['value'].apply(lambda x: "₹{:,.0f}".format(x))
 
 # Calculate the total portfolio value
 total_value = df['value'].sum()
-total_value_inr = "₹{:,.2f}".format(total_value)
+total_value_inr = "₹{:,.0f}".format(total_value)
 
 # Streamlit app layout
 st.title("Crypto Portfolio Tracker")
@@ -41,8 +41,8 @@ st.subheader("Portfolio Overview - Bubble Chart")
 fig_bubble = px.scatter(
     df, 
     x='coin', 
-    y='value', 
-    size='value', 
+    y='value_inr', 
+    size='value_inr', 
     color='coin', 
     hover_name='coin', 
     text='coin', 
@@ -51,6 +51,8 @@ fig_bubble = px.scatter(
 fig_bubble.update_traces(marker=dict(sizemode='diameter', line_width=2, opacity=0.6), textfont=dict(color='white', size=14))
 st.plotly_chart(fig_bubble, use_container_width=True)
 
+
+df['percent_gain'] = df['percent_gain'].apply(lambda x: "{:,.0f}".format(x))
 
 # Plotting the bar chart
 st.subheader("Percent Gain by Coin")
@@ -131,8 +133,8 @@ st.subheader("Percent Gain vs Value")
 fig_scatter = px.scatter(
     df, 
     x='percent_gain', 
-    y='value', 
-    size='value', 
+    y='value_inr', 
+    size='value_inr', 
     color='coin', 
     hover_name='coin', 
     title="Percent Gain vs Portfolio Value",
