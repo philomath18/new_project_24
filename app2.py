@@ -5,66 +5,88 @@ import requests
 import io
 
 # Define a function to fetch and load the latest data
-@st.cache(ttl=3600)  # Cache data for an hour
+@st.cache(ttl=3600)
 def load_data():
-    # Replace YOUR_FILE_ID with the actual Google Drive file ID
     file_id = "1cwZLxlaob5P40ijaGf4U3Rqc4ERwVYI6"
     file_url = f"https://drive.google.com/uc?id={file_id}"
-    
-    # Download the file content
     response = requests.get(file_url)
-    response.raise_for_status()  # Raise an exception for bad responses
-    
-    # Read the CSV data using io.StringIO to handle potential encoding issues
+    response.raise_for_status()
     df = pd.read_csv(io.StringIO(response.text), sep=',', on_bad_lines='warn')
-    
     try:
-        df = df.drop('Unnamed: 0', axis=1)  # Drop the extra index column if present
+        df = df.drop('Unnamed: 0', axis=1)
     except:
-        df = df
-    
+        pass
     return df
 
-# Fetch the latest data
+# Load data
 df = load_data()
 
-# Create a new column for INR-formatted values (for display purposes)
+# Create a new column for INR-formatted values
 df['value_inr'] = df['value'].apply(lambda x: "₹{:,.2f}".format(x))
 
-# Calculate the total portfolio value (sum of the original 'value' column, not the formatted one)
+# Calculate the total portfolio value
 total_value = df['value'].sum()
-
-# Format the total portfolio value in INR
 total_value_inr = "₹{:,.2f}".format(total_value)
 
 # Streamlit app layout
 st.title("Crypto Portfolio Tracker")
+st.markdown(f"<h3 style='text-align: right; font-weight: bold;'>Total Portfolio Value: {total_value_inr}</h3>", unsafe_allow_html=True)
 st.write("This dashboard shows your crypto portfolio performance.")
 
-# Display the total portfolio value at the top right in bold
-st.markdown(f"<h3 style='text-align: right; font-weight: bold;'>Total Portfolio Value: {total_value_inr}</h3>", unsafe_allow_html=True)
-
-# Display the DataFrame
+# Display the data
 st.subheader("Portfolio Data")
 st.dataframe(df)
 
-# Bubble chart visualization for portfolio analysis
+# Bubble Chart
 st.subheader("Portfolio Overview - Bubble Chart")
-
-# Bubble chart (adjust columns as per your DataFrame structure)
-fig = px.scatter(
+fig_bubble = px.scatter(
     df, 
-    x='coin',  # Use the coin names on the X-axis
-    y='value',  # Y-axis should be the value of the coin (numeric for charting)
-    size='value',  # Bubble size should be proportional to the value
-    color='coin',  # Color by coin type (or any other column, like 'category')
-    hover_name='coin',  # Show the coin name when hovering
-    text='coin',  # Display coin names inside the bubbles
+    x='coin', 
+    y='value', 
+    size='value', 
+    color='coin', 
+    hover_name='coin', 
+    text='coin', 
     title="Bubble Chart of Portfolio"
 )
+fig_bubble.update_traces(marker=dict(sizemode='diameter', line_width=2, opacity=0.6), textfont=dict(color='white', size=14))
+st.plotly_chart(fig_bubble)
 
-# Customize the layout of the bubble chart
-fig.update_traces(marker=dict(sizemode='diameter', line_width=2, opacity=0.6))
+# Bar Chart for Percent Gain
+st.subheader("Percent Gain by Coin")
+fig_bar = px.bar(
+    df, 
+    x='coin', 
+    y='percent_gain', 
+    color='percent_gain', 
+    title="Percent Gain by Coin",
+    labels={"percent_gain": "Percent Gain (%)"}
+)
+fig_bar.update_layout(coloraxis_colorbar=dict(title="Percent Gain"))
+st.plotly_chart(fig_bar)
 
-# Show the plot in Streamlit
-st.plotly_chart(fig)
+# Pie Chart for Multiplier Flags
+st.subheader("Multiplier Milestone Distribution")
+multipliers = ['3x', '5x', '10x', '20x']
+multiplier_counts = {multiplier: df[multiplier].sum() for multiplier in multipliers}
+fig_pie = px.pie(
+    names=list(multiplier_counts.keys()), 
+    values=list(multiplier_counts.values()), 
+    title="Distribution of Multiplier Milestones",
+    color_discrete_sequence=px.colors.sequential.RdBu
+)
+st.plotly_chart(fig_pie)
+
+# Scatter Plot: Percent Gain vs Value
+st.subheader("Percent Gain vs Value")
+fig_scatter = px.scatter(
+    df, 
+    x='percent_gain', 
+    y='value', 
+    size='value', 
+    color='coin', 
+    hover_name='coin', 
+    title="Percent Gain vs Portfolio Value",
+    labels={"percent_gain": "Percent Gain (%)", "value": "Value (₹)"}
+)
+st.plotly_chart(fig_scatter)
