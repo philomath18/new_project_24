@@ -17,7 +17,7 @@ def load_data():
     except:
         pass
     return df
-print('Hi')
+
 # Load data
 df = load_data()
 
@@ -65,43 +65,36 @@ fig_bar = px.bar(
 fig_bar.update_layout(coloraxis_colorbar=dict(title="Percent Gain"))
 st.plotly_chart(fig_bar)
 
-# Stacked Bar Chart for Multipliers
-st.subheader("Multipliers Reached by Coins")
+# Horizontal Bar Chart for Multiplier Progression
+st.subheader("Coins vs. Maximum Multiplier Reached")
 
-# Prepare data for visualization
-multiplier_cols = ['3x', '5x', '10x', '20x']  # Select the multiplier columns
-melted_df = df[['coin'] + multiplier_cols].melt(
-    id_vars='coin', 
-    value_vars=multiplier_cols, 
-    var_name='Multiplier', 
-    value_name='Reached'
+# Find the maximum multiplier achieved for each coin
+multiplier_map = {'3x': 3, '5x': 5, '10x': 10, '20x': 20}  # Map column names to numeric values
+df['max_multiplier'] = df[['3x', '5x', '10x', '20x']].dot([3, 5, 10, 20])  # Calculate max multiplier per coin
+
+# Create the horizontal bar chart
+fig_horizontal = px.bar(
+    df.sort_values('max_multiplier', ascending=True),  # Sort coins by max multiplier
+    y='coin',  # Coins on Y-axis
+    x='max_multiplier',  # Multiplier values on X-axis
+    orientation='h',  # Horizontal bars
+    title="Maximum Multiplier Reached by Each Coin",
+    color='max_multiplier',  # Use a color gradient based on max multiplier
+    color_continuous_scale=px.colors.sequential.Viridis,  # Modern color palette
+    labels={'coin': 'Coin', 'max_multiplier': 'Maximum Multiplier'},
+    text='max_multiplier'  # Display max multiplier as text on the bars
 )
 
-# Filter only rows where the multiplier is reached (value = 1)
-melted_df = melted_df[melted_df['Reached'] == 1]
-
-# Create a stacked bar chart
-fig_mult = px.bar(
-    melted_df, 
-    x='coin', 
-    y='Reached', 
-    color='Multiplier', 
-    title="Multipliers Reached by Coins",
-    text='Multiplier',
-    labels={'Reached': 'Reached (1=Yes)', 'Multiplier': 'Multiplier'},
-    color_discrete_sequence=px.colors.qualitative.Set2
+# Customize layout for clarity
+fig_horizontal.update_layout(
+    xaxis=dict(title="Multiplier Value"),  # X-axis title
+    yaxis=dict(title="Coin", automargin=True),  # Y-axis title
+    coloraxis_colorbar=dict(title="Multiplier"),  # Colorbar title
+    height=800  # Adjust height for better readability
 )
 
-# Adjust layout for better readability
-fig_mult.update_layout(
-    xaxis=dict(title="Coin", tickangle=-45),  # Rotate X-axis labels
-    yaxis=dict(title="Multiplier Reached (Flag)"),
-    barmode='stack',  # Stack the bars
-    legend_title="Multiplier"
-)
-
-# Display the chart
-st.plotly_chart(fig_mult)
+# Show the chart
+st.plotly_chart(fig_horizontal)
 
 # Scatter Plot: Percent Gain vs Value
 st.subheader("Percent Gain vs Value")
