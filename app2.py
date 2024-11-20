@@ -8,7 +8,7 @@ import io
 @st.cache(ttl=3600)  # Cache data for an hour
 def load_data():
     # Replace YOUR_FILE_ID with the actual Google Drive file ID
-    file_id = "1W3wyUzLnEuItWNS5Jjg6E5GUdnNpVdIT"
+    file_id = "1cwZLxlaob5P40ijaGf4U3Rqc4ERwVYI6"
     file_url = f"https://drive.google.com/uc?id={file_id}"
     
     # Download the file content
