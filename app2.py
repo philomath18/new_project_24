@@ -41,8 +41,8 @@ st.subheader("Portfolio Overview - Bubble Chart")
 fig_bubble = px.scatter(
     df, 
     x='coin', 
-    y='value_inr', 
-    size='value_inr', 
+    y='value', 
+    size='value', 
     color='coin', 
     hover_name='coin', 
     text='coin', 
