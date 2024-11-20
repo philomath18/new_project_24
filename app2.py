@@ -65,7 +65,6 @@ fig_bar.update_layout(coloraxis_colorbar=dict(title="Percent Gain"))
 st.plotly_chart(fig_bar)
 
 ##### Multiplier Chart
-
 # Heatmap for Coin Multipliers
 st.subheader("Multiplier Achievement Heatmap")
 
@@ -88,7 +87,7 @@ fig_heatmap = px.imshow(
     labels={'x': 'Multiplier', 'y': 'Coin', 'color': 'Reached'},
     title="Heatmap of Multiplier Achievement by Coin",
     color_continuous_scale=['white', 'green'],  # White for 0 (Not Reached), Green for 1 (Reached)
-    height=1200  # Fit all coins
+    height=800  # Set the height for the plot
 )
 
 # Set the color scale to be discrete with two values
@@ -107,13 +106,17 @@ fig_heatmap.update_layout(
     yaxis=dict(
         title="Coin"
     ),
-    width=2000,  # Increase the width of the plot (adjusted width)
-    height=800,  # Adjust the height as needed
-    margin=dict(l=100, r=100, t=50, b=50)  # Adjust margins for space on the sides
+    width=1000,  # Increase the width of the plot
+    height=600,  # Adjust the height as needed
+    margin=dict(l=50, r=50, t=50, b=50)  # Adjust margins for space on the sides
 )
 
-# Show the heatmap with specific width settings
-st.plotly_chart(fig_heatmap, use_container_width=False)  # False allows for manual width control
+# Create a layout with columns to manage space for the chart
+col1, col2, col3 = st.columns([0.5, 2, 0.5])  # Adjust column widths as needed
+
+# Place the heatmap in the center column to control width
+with col2:
+    st.plotly_chart(fig_heatmap)  # This will be centered and have increased width
 
 # Scatter Plot: Percent Gain vs Value
 st.subheader("Percent Gain vs Value")
