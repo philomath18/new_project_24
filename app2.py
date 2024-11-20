@@ -105,6 +105,34 @@ fig_horizontal.update_traces(textposition='inside', textfont_size=12)
 # Show the updated chart in Streamlit
 st.plotly_chart(fig_horizontal)
 
+###################
+# Heatmap for Coin Multipliers
+st.subheader("Multiplier Achievement Heatmap")
+
+# Reshape the DataFrame for heatmap input
+df_heatmap = df[['coin', '3x', '5x', '10x', '20x']].melt(id_vars='coin', var_name='Multiplier', value_name='Reached')
+
+# Replace 'Reached' with numeric values (0 for not reached, 1 for reached)
+df_heatmap['Reached'] = df_heatmap['Reached'].apply(lambda x: 1 if x == 1 else 0)
+
+# Create heatmap
+fig_heatmap = px.imshow(
+    df_heatmap.pivot(index='coin', columns='Multiplier', values='Reached'),
+    labels={'x': 'Multiplier', 'y': 'Coin', 'color': 'Reached'},
+    color_continuous_scale='Viridis',
+    title="Heatmap of Multiplier Achievement by Coin",
+    height=1200  # Fit all coins
+)
+
+# Show the heatmap
+st.plotly_chart(fig_heatmap)
+
+
+
+
+###############
+
+
 # Scatter Plot: Percent Gain vs Value
 st.subheader("Percent Gain vs Value")
 fig_scatter = px.scatter(
