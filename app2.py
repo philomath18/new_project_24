@@ -42,7 +42,7 @@ percent_gain_portfolio = (total_value-total_initial_value)*100/total_initial_val
 st.title("Crypto Portfolio Tracker")
 st.markdown(f"<h3 style='text-align: right; font-weight: bold;'>Total Portfolio Value: {total_value_inr}</h3>", unsafe_allow_html=True)
 
-st.markdown(f"<h3 style='text-align: right; font-weight: bold;'>Total Portfolio Gain: {percent_gain_portfolio+'%'}</h3>", unsafe_allow_html=True)
+st.markdown(f"<h3 style='text-align: right; font-weight: bold;'>Total Portfolio Gain: {percent_gain_portfolio}</h3>", unsafe_allow_html=True)
 
 st.write("This dashboard shows your crypto portfolio performance.")
 
