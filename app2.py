@@ -65,20 +65,7 @@ fig_bar = px.bar(
 fig_bar.update_layout(coloraxis_colorbar=dict(title="Percent Gain"))
 st.plotly_chart(fig_bar)
 
-import plotly.express as px
-import pandas as pd
-
-# Sample DataFrame (replace with your actual data)
-data = {
-    'coin': ['BTC', 'ETH', 'XRP', 'LTC', 'SOL'],
-    '3x': [1, 1, 0, 1, 0],
-    '5x': [1, 0, 1, 0, 1],
-    '10x': [0, 1, 0, 1, 0],
-    '20x': [1, 0, 0, 0, 0]
-}
-
-df = pd.DataFrame(data)
-
+##### multipler chart
 # Reshape data for stacking (melt the dataframe)
 df_stack = df[['coin', '3x', '5x', '10x', '20x']].melt(id_vars='coin', var_name='Multiplier', value_name='Reached')
 
