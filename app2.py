@@ -82,18 +82,18 @@ df_heatmap['Multiplier'] = pd.Categorical(df_heatmap['Multiplier'], categories=m
 # Create the pivot table for the heatmap
 pivot_df = df_heatmap.pivot(index='coin', columns='Multiplier', values='Reached')
 
-# Create heatmap with a discrete color scale (using only 2 colors for 0 and 1)
+# Create heatmap with a discrete color scale (using white for 0 and green for 1)
 fig_heatmap = px.imshow(
     pivot_df,
     labels={'x': 'Multiplier', 'y': 'Coin', 'color': 'Reached'},
     title="Heatmap of Multiplier Achievement by Coin",
-    color_continuous_scale=['red', 'green'],  # Discrete colors for 0 and 1
+    color_continuous_scale=['white', 'green'],  # White for 0 (Not Reached), Green for 1 (Reached)
     height=1200  # Fit all coins
 )
 
 # Set the color scale to be discrete with two values
 fig_heatmap.update_traces(
-    colorscale=[[0, 'red'], [1, 'green']],  # Red for 0 (Not Reached), Green for 1 (Reached)
+    colorscale=[[0, 'white'], [1, 'green']],  # White for 0 (Not Reached), Green for 1 (Reached)
     colorbar=dict(tickvals=[0, 1], ticktext=["Not Reached", "Reached"])  # Labels for 0 and 1
 )
 
@@ -106,7 +106,8 @@ fig_heatmap.update_layout(
     ),
     yaxis=dict(
         title="Coin"
-    )
+    ),
+    width=1000  # Increase the width of the plot (adjust as needed)
 )
 
 # Show the heatmap
