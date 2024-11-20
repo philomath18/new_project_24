@@ -65,38 +65,64 @@ fig_bar = px.bar(
 fig_bar.update_layout(coloraxis_colorbar=dict(title="Percent Gain"))
 st.plotly_chart(fig_bar)
 
-# Reshape data for heatmap
-df_melted = df.melt(id_vars='coin', var_name='Multiplier', value_name='Reached')
+import plotly.express as px
+import pandas as pd
 
-# Replace multiplier names to ensure they are in the correct order
-df_melted['Multiplier'] = pd.Categorical(df_melted['Multiplier'], categories=['3x', '5x', '10x', '20x'], ordered=True)
+# Sample DataFrame (replace with your actual data)
+data = {
+    'coin': ['BTC', 'ETH', 'XRP', 'LTC', 'SOL'],
+    '3x': [1, 1, 0, 1, 0],
+    '5x': [1, 0, 1, 0, 1],
+    '10x': [0, 1, 0, 1, 0],
+    '20x': [1, 0, 0, 0, 0]
+}
 
-# Adjust 'Reached' values to match the multipliers for the color scale
-df_melted['Reached'] = df_melted['Multiplier'].str.extract(r'(\d+)').astype(int)['Multiplier'] * df_melted['Reached']
+df = pd.DataFrame(data)
 
-# Create the heatmap
-fig = px.imshow(
-    df.pivot(index='coin', columns='Multiplier', values='Reached'),
-    labels={'x': 'Multiplier', 'y': 'Coin', 'color': 'Multiplier'},
-    title="Heatmap of Multiplier Achievement by Coin",
-    color_continuous_scale=px.colors.sequential.Viridis,
+# Reshape data for stacking (melt the dataframe)
+df_stack = df[['coin', '3x', '5x', '10x', '20x']].melt(id_vars='coin', var_name='Multiplier', value_name='Reached')
+
+# Only keep the rows where the multiplier is reached (i.e., where the value is 1)
+df_stack = df_stack[df_stack['Reached'] == 1]
+
+# Define the order of multipliers
+multiplier_order = ['3x', '5x', '10x', '20x']
+
+# Create stacked bar chart
+fig_stacked = px.bar(
+    df_stack,
+    x='coin',
+    y='Multiplier',
+    color='Multiplier',
+    title="Stacked Bar Chart of Multipliers by Coin",
+    color_discrete_sequence=px.colors.qualitative.Set3,
+    labels={'coin': 'Coin', 'Multiplier': 'Multiplier'},
+    text='Multiplier'
 )
 
-# Update layout for larger width and custom color legend
-fig.update_layout(
-    xaxis=dict(title="Multiplier", tickmode='linear', automargin=True),
-    yaxis=dict(title="Coin", automargin=True),
-    height=1000,
-    width=1000,  # Increase width for better visibility
-    coloraxis_colorbar=dict(
+# Update the layout for the color scale and axis
+fig_stacked.update_traces(marker=dict(line=dict(width=1, color='white')))  # Optional: border color for bars
+fig_stacked.update_layout(
+    coloraxis=dict(
+        colorscale='Viridis',  # Choose an appropriate color scale
+        colorbar=dict(title="Multiplier Value", tickvals=[3, 5, 10, 20], ticktext=['3x', '5x', '10x', '20x'])
+    ),
+    xaxis=dict(
+        title="Coin",
+        categoryorder='array',
+        categoryarray=df['coin'].tolist()  # Ensure coins are ordered based on input data
+    ),
+    yaxis=dict(
         title="Multiplier",
-        tickvals=[3, 5, 10, 20],  # Only show relevant values in the color bar
-        ticktext=['3x', '5x', '10x', '20x'],
-    )
+        tickvals=[3, 5, 10, 20],  # Make sure multiplier values are shown as ticks
+        ticktext=['3x', '5x', '10x', '20x']
+    ),
+    height=700,  # Adjust based on visualization
+    margin=dict(l=50, r=50, t=50, b=50)  # Adjust margins
 )
 
-# Show the updated heatmap
-fig.show()
+# Show the chart
+st.plotly_chart(fig_stacked)
 
 
 ###############
