@@ -32,5 +32,5 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: executed-notebook
-        path: /tmp/crypto_portfolio_updated.ipynb
+        path: /tmp/run_output_notebook.ipynb
 
