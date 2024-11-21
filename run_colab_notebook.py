@@ -2,7 +2,7 @@ import papermill as pm
 import os
 
 # Path to the notebook file on GitHub
-notebook_path = "https://github.com/philomath18/new_project_24/blob/main/crypto_portfolio_tracker.ipynb"  # Update with your GitHub notebook path
+notebook_path = "https://raw.githubusercontent.com/philomath18/new_project_24/refs/heads/main/crypto_portfolio_tracker.ipynb"  # Update with your GitHub notebook path
 #output_notebook = "https://github.com/philomath18/new_project_24/crpyto_tracker_output.ipynb"  # Name for the executed notebook output
 output_notebook = '/tmp/crypto_portfolio_updated.ipynb'
 # Run the notebook using papermill
