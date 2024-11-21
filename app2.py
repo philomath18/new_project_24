@@ -20,7 +20,7 @@ import io
 
 def load_data():
     # Replace with the URL of your raw CSV file on GitHub
-    github_repo_url = "https://github.com/philomath18/new_project_24/blob/main/crypto_portfolio_updated.csv"
+    github_repo_url = "https://raw.githubusercontent.com/philomath18/new_project_24/refs/heads/main/crypto_portfolio_updated.csv"
     
     # Fetch the data from GitHub
     response = requests.get(github_repo_url)
@@ -34,7 +34,7 @@ def load_data():
     
     return df
 
-# Load data
+
 df = load_data()
 
 # df.loc[df['coin'] == 'USDT', 'prev_price'] = 1
