@@ -5,16 +5,33 @@ import requests
 import io
 
 # Define a function to fetch and load the latest data
+# def load_data():
+#     file_id = "1cwZLxlaob5P40ijaGf4U3Rqc4ERwVYI6"
+#     file_url = f"https://drive.google.com/uc?id={file_id}"
+#     response = requests.get(file_url)
+#     response.raise_for_status()
+#     df = pd.read_csv(io.StringIO(response.text), sep=',', on_bad_lines='warn')
+#     try:
+#         df = df.drop('Unnamed: 0', axis=1)
+#     except:
+#         pass
+#     return df
+
+
 def load_data():
-    file_id = "1cwZLxlaob5P40ijaGf4U3Rqc4ERwVYI6"
-    file_url = f"https://drive.google.com/uc?id={file_id}"
-    response = requests.get(file_url)
-    response.raise_for_status()
+    # Replace with the URL of your raw CSV file on GitHub
+    github_repo_url = "https://github.com/philomath18/new_project_24/blob/main/crypto_portfolio_updated.csv"
+    
+    # Fetch the data from GitHub
+    response = requests.get(github_repo_url)
+    response.raise_for_status()  # Raise an error for failed requests
+
+    # Load the CSV into a DataFrame
     df = pd.read_csv(io.StringIO(response.text), sep=',', on_bad_lines='warn')
-    try:
-        df = df.drop('Unnamed: 0', axis=1)
-    except:
-        pass
+    
+    # Drop unnecessary columns if they exist
+    df = df.drop('Unnamed: 0', axis=1, errors='ignore')
+    
     return df
 
 # Load data
