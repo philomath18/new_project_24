@@ -3,8 +3,8 @@ import os
 
 # Path to the notebook file on GitHub
 notebook_path = "https://raw.githubusercontent.com/philomath18/new_project_24/refs/heads/main/test_notebook.ipynb"
-#output_notebook = './crypto_portfolio_updated.ipynb'
-output_notebook = 'https://github.com/philomath18/new_project_24/test_output_notebook.ipynb'
+output_notebook = '/tmp/test_output_notebook.ipynb'
+#output_notebook = 'https://github.com/philomath18/new_project_24/test_output_notebook.ipynb'
 
 # Run the notebook using papermill
 try:
