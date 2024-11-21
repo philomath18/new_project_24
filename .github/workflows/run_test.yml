@@ -32,5 +32,5 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: executed-notebook
-        path: /tmp/run_output_notebook.ipynb
+        path: /tmp/test_output_notebook.ipynb
 
