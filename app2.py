@@ -37,8 +37,8 @@ def load_data():
 
 df = load_data()
 
-# df.loc[df['coin'] == 'USDT', 'prev_price'] = 1
-# df.loc[df['coin'] == 'USDT', 'percent_gain'] = 0
+df.loc[df['coin'] == 'USDT', 'prev_price'] = 1
+df.loc[df['coin'] == 'USDT', 'percent_gain'] = 0
 
 df['value_initial'] = df['prev_price']*df['qty']
 total_initial_value = df['value_initial'].sum()*90
