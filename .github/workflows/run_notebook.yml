@@ -10,20 +10,57 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # Checkout the repository
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    # Set up Python environment
     - name: Set up Python environment
       uses: actions/setup-python@v4
       with:
         python-version: '3.9'
 
+    # Install dependencies
     - name: Install dependencies
       run: |
         pip install jupyter ipykernel
         pip install papermill[github]
-        
 
+    # Run the Colab notebook
     - name: Run the Colab notebook
       run: |
         python run_colab_notebook.py
+
+    # Upload executed notebook as an artifact (optional)
+    - name: Upload executed notebook
+      uses: actions/upload-artifact@v3
+      with:
+        name: executed-notebook
+        path: /tmp/crypto_portfolio_updated.ipynb
+
+    # Commit and push the executed notebook to the repository
+    # - name: Commit and push updated notebook
+    #   run: |
+    #     git config --global user.name "github-actions[bot]"
+    #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
+    #     cp /tmp/crypto_portfolio_updated.ipynb ./crypto_portfolio_updated.ipynb
+    #     git add ./test_output_notebook.ipynb
+    #     git commit -m "Update executed notebook [skip ci]"
+    #     git push origin main
+
+    - name: Commit and push updated notebook and CSV
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        
+        # Copy files from /tmp to the repository
+        cp /tmp/crypto_portfolio_updated.ipynb ./crypto_portfolio_updated.ipynb
+        cp /tmp/crypto_portfolio_updated.csv ./crypto_portfolio_updated.csv
+        
+        # Stage changes
+        git add ./crypto_portfolio_updated.ipynb
+        git add ./crypto_portfolio_updated.csv
+        
+        # Commit and push
+        git commit -m "Update executed notebook and CSV [skip ci]"
+        git push origin main
