@@ -27,3 +27,10 @@ jobs:
     - name: Run the Colab notebook
       run: |
         python run_test_notebook.py
+
+    - name: Upload executed notebook
+      uses: actions/upload-artifact@v3
+      with:
+        name: executed-notebook
+        path: /tmp/crypto_portfolio_updated.ipynb
+
