@@ -162,50 +162,50 @@ st.plotly_chart(fig_scatter, use_container_width=True)
 
 ####
 
-import plotly.express as px
-import plotly.graph_objects as go
+# import plotly.express as px
+# import plotly.graph_objects as go
 
 
-# Reshape the data for the lollipop chart (melt the multipliers)
-df_stack = df[['coin', '3x', '5x', '10x', '20x']].melt(id_vars='coin', var_name='Multiplier', value_name='Reached')
+# # Reshape the data for the lollipop chart (melt the multipliers)
+# df_stack = df[['coin', '3x', '5x', '10x', '20x']].melt(id_vars='coin', var_name='Multiplier', value_name='Reached')
 
-# Filter only rows where multiplier was reached (Reached == 1)
-df_stack_filtered = df_stack[df_stack['Reached'] == 1]
+# # Filter only rows where multiplier was reached (Reached == 1)
+# df_stack_filtered = df_stack[df_stack['Reached'] == 1]
 
-# Create the lollipop chart
-fig_lollipop = go.Figure()
+# # Create the lollipop chart
+# fig_lollipop = go.Figure()
 
-# Add scatter (markers for the lollipops)
-fig_lollipop.add_trace(
-    go.Scatter(
-        x=df_stack_filtered['coin'],
-        y=df_stack_filtered['Multiplier'],
-        mode='markers',
-        marker=dict(size=12, color='blue', line=dict(width=2, color='black')),
-        name='Multiplier Reached'
-    )
-)
+# # Add scatter (markers for the lollipops)
+# fig_lollipop.add_trace(
+#     go.Scatter(
+#         x=df_stack_filtered['coin'],
+#         y=df_stack_filtered['Multiplier'],
+#         mode='markers',
+#         marker=dict(size=12, color='blue', line=dict(width=2, color='black')),
+#         name='Multiplier Reached'
+#     )
+# )
 
-# Add lines (sticks for the lollipops)
-fig_lollipop.add_trace(
-    go.Scatter(
-        x=df_stack_filtered['coin'],
-        y=df_stack_filtered['Multiplier'],
-        mode='lines',
-        line=dict(width=3, color='blue'),
-        name='Multiplier Line'
-    )
-)
+# # Add lines (sticks for the lollipops)
+# fig_lollipop.add_trace(
+#     go.Scatter(
+#         x=df_stack_filtered['coin'],
+#         y=df_stack_filtered['Multiplier'],
+#         mode='lines',
+#         line=dict(width=3, color='blue'),
+#         name='Multiplier Line'
+#     )
+# )
 
-# Customize layout
-fig_lollipop.update_layout(
-    title="Multipliers Reached by Coins",
-    xaxis=dict(title="Coin", tickangle=45),
-    yaxis=dict(title="Multiplier", tickvals=['3x', '5x', '10x', '20x'], ticktext=['3x', '5x', '10x', '20x']),
-    showlegend=False,
-    height=600,
-    margin=dict(l=50, r=50, t=50, b=50),
-)
+# # Customize layout
+# fig_lollipop.update_layout(
+#     title="Multipliers Reached by Coins",
+#     xaxis=dict(title="Coin", tickangle=45),
+#     yaxis=dict(title="Multiplier", tickvals=['3x', '5x', '10x', '20x'], ticktext=['3x', '5x', '10x', '20x']),
+#     showlegend=False,
+#     height=600,
+#     margin=dict(l=50, r=50, t=50, b=50),
+# )
 
-# Display the lollipop chart
-st.plotly_chart(fig_lollipop, use_container_width=True)
+# # Display the lollipop chart
+# st.plotly_chart(fig_lollipop, use_container_width=True)
