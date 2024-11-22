@@ -57,7 +57,7 @@ def update_portfolio(df):
         # Ask if the user wants to update another coin
         update_another = st.radio(
             'Do you have updates on any other coin?', 
-            ['Yes', 'No'],
+            ['No', 'Yes'],
             key=f"update_another_{iteration}"  # Unique key for each iteration
         )
 
