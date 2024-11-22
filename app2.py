@@ -63,12 +63,12 @@ df.loc[df['coin'] == 'USDT', 'percent_gain'] = 0
 df = update_portfolio(df)
 
 # Recalculate portfolio metrics
-df['value_initial'] = df['prev_price'] * df['qty']
-total_initial_value = df['value_initial'].sum() * 90
+df['value_initial'] = df['prev_price'] * df['qty'] * 90
+total_initial_value = df['value_initial'].sum()
 
 # Calculate the total portfolio value
 df['value'] = df['value'].astype(int)
-df['value_inr'] = df['value_inr'] * 90
+df['value_inr'] = df['value'] * 90
 df['value_inr'] = df['value_inr'].astype(int)
 
 #st.markdown(f"<h3 style='text-align: right; font-weight: bold;'>check: {total_initial_value}</h3>", unsafe_allow_html=True)
