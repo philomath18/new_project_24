@@ -142,12 +142,22 @@ fig_scatter = px.scatter(
 )
 st.plotly_chart(fig_scatter, use_container_width=True)
 
-# Lollipop Chart for Multipliers
-st.subheader("Multipliers Reached by Coins")
+####
+
+import plotly.express as px
+import plotly.graph_objects as go
+
+
+# Reshape the data for the lollipop chart (melt the multipliers)
 df_stack = df[['coin', '3x', '5x', '10x', '20x']].melt(id_vars='coin', var_name='Multiplier', value_name='Reached')
+
+# Filter only rows where multiplier was reached (Reached == 1)
 df_stack_filtered = df_stack[df_stack['Reached'] == 1]
 
+# Create the lollipop chart
 fig_lollipop = go.Figure()
+
+# Add scatter (markers for the lollipops)
 fig_lollipop.add_trace(
     go.Scatter(
         x=df_stack_filtered['coin'],
@@ -157,6 +167,8 @@ fig_lollipop.add_trace(
         name='Multiplier Reached'
     )
 )
+
+# Add lines (sticks for the lollipops)
 fig_lollipop.add_trace(
     go.Scatter(
         x=df_stack_filtered['coin'],
@@ -166,6 +178,8 @@ fig_lollipop.add_trace(
         name='Multiplier Line'
     )
 )
+
+# Customize layout
 fig_lollipop.update_layout(
     title="Multipliers Reached by Coins",
     xaxis=dict(title="Coin", tickangle=45),
@@ -174,4 +188,6 @@ fig_lollipop.update_layout(
     height=600,
     margin=dict(l=50, r=50, t=50, b=50),
 )
+
+# Display the lollipop chart
 st.plotly_chart(fig_lollipop, use_container_width=True)
