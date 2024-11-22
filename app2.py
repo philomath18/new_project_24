@@ -40,9 +40,9 @@ def update_portfolio(df):
         df.loc[df['coin'] == selected_coin, 'qty'] = updated_qty
 
         # Recalculate values based on updated quantity
-        df['value'] = df['prev_price'] * df['qty']
-        df['value_inr'] = df['value'].apply(lambda x: "{:,.0f}".format(x))
-
+        df['value'] = df['prices'] * df['qty']
+        df['value_inr'] = df['value']*90
+        
         # Ask if the user wants to update another coin
         update_another = st.radio('Do you have updates on any other coin?', ['Yes', 'No'])
 
@@ -67,6 +67,12 @@ df['value_initial'] = df['prev_price'] * df['qty']
 total_initial_value = df['value_initial'].sum() * 90
 
 # Calculate the total portfolio value
+df['value'] = df['value'].astype(int)
+df['value_inr'] = df['value_inr'].apply(lambda x: "{:,.0f}".format(x))
+
+#st.markdown(f"<h3 style='text-align: right; font-weight: bold;'>check: {total_initial_value}</h3>", unsafe_allow_html=True)
+
+# Calculate the total portfolio value
 total_value = df['value'].sum()
 total_value_inr = "₹{:,.0f}".format(total_value)
 
@@ -88,8 +94,8 @@ st.subheader("Portfolio Overview - Bubble Chart")
 fig_bubble = px.scatter(
     df, 
     x='coin', 
-    y='value', 
-    size='value', 
+    y='value_inr', 
+    size='value_inr', 
     color='coin', 
     hover_name='coin', 
     text='coin', 
@@ -125,8 +131,8 @@ st.subheader("Percent Gain vs Value")
 fig_scatter = px.scatter(
     df, 
     x='percent_gain', 
-    y='value', 
-    size='value', 
+    y='value_inr', 
+    size='value_inr', 
     color='coin', 
     hover_name='coin', 
     title="Percent Gain vs Portfolio Value",
