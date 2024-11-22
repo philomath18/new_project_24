@@ -76,12 +76,14 @@ df['value_inr'] = df['value_inr'].apply(lambda x: "{:,.0f}".format(x))
 total_value = df['value'].sum()
 total_value_inr = total_value * 90
 
+total_value_inr_formatted = "{:,.0f}%".format(total_value_inr)
+
 percent_gain_portfolio = (total_value_inr - total_initial_value) * 100 / total_initial_value
 percent_gain_portfolio = "{:,.0f}%".format(percent_gain_portfolio)
 
 # Streamlit app layout
 st.title("Crypto Portfolio Tracker")
-st.markdown(f"<h3 style='text-align: right; font-weight: bold;'>Total Portfolio Value: {total_value_inr}</h3>", unsafe_allow_html=True)
+st.markdown(f"<h3 style='text-align: right; font-weight: bold;'>Total Portfolio Value: {total_value_inr_formatted}</h3>", unsafe_allow_html=True)
 st.markdown(f"<h3 style='text-align: right; font-weight: bold;'>Total Portfolio Gain: {percent_gain_portfolio}</h3>", unsafe_allow_html=True)
 st.write("This dashboard shows your crypto portfolio performance.")
 
