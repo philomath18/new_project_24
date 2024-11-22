@@ -19,39 +19,57 @@ df = load_data()
 # Function to update portfolio based on user input
 # Function to update portfolio based on user input
 def update_portfolio(df):
+    # We'll track the number of iterations to make each widget key unique
+    iteration = 0
+    
     while True:
-        # Coin Name
+        # Coin Name - Use a unique key for the selectbox based on iteration
         coin_options = df['coin'].unique()
-        selected_coin = st.selectbox('Select Coin', coin_options)
+        selected_coin = st.selectbox(
+            'Select Coin', 
+            coin_options,
+            key=f"select_coin_{iteration}"  # Unique key for each iteration
+        )
 
         # Current Quantity (make sure it’s an integer or float)
         current_qty = df.loc[df['coin'] == selected_coin, 'qty'].values[0]
-        
+
         # Ensure that current_qty is a number (int or float), in case it’s NaN or another type
         if pd.isna(current_qty):
             current_qty = 0  # Set to 0 if it's NaN
         else:
-            current_qty = float(current_qty)  # Ensure it's a float, you can also use int(current_qty) if needed
+            current_qty = float(current_qty)  # Ensure it's a float
 
-        # Updated Quantity (ensure it's an int or float)
-        updated_qty = st.number_input(f'Enter updated quantity for {selected_coin}', value=current_qty)
+        # Updated Quantity (ensure it's an int or float) - Unique key for each iteration
+        updated_qty = st.number_input(
+            f'Enter updated quantity for {selected_coin}', 
+            value=current_qty, 
+            min_value=0,
+            key=f"number_input_qty_{iteration}"  # Unique key for each iteration
+        )
 
         # Update the quantity in the dataframe
         df.loc[df['coin'] == selected_coin, 'qty'] = updated_qty
 
         # Recalculate values based on updated quantity
         df['value'] = df['prices'] * df['qty']
-        df['value_inr'] = df['value']*90
-        
+        df['value_inr'] = df['value'] * 90
+
         # Ask if the user wants to update another coin
-        update_another = st.radio('Do you have updates on any other coin?', ['Yes', 'No'])
+        update_another = st.radio(
+            'Do you have updates on any other coin?', 
+            ['Yes', 'No'],
+            key=f"update_another_{iteration}"  # Unique key for each iteration
+        )
 
         if update_another == 'No':
             break
         else:
+            iteration += 1  # Increment the iteration to generate unique keys for the next loop
             continue
 
     return df
+
 
 
 # Update portfolio based on user inputs
