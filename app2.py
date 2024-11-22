@@ -44,7 +44,6 @@ def update_portfolio(df):
         updated_qty = st.number_input(
             f'Enter updated quantity for {selected_coin}', 
             value=current_qty, 
-            min_value=0,
             key=f"number_input_qty_{iteration}"  # Unique key for each iteration
         )
 
