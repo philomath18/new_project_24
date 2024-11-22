@@ -26,7 +26,7 @@ def update_portfolio(df):
 
         # Current Quantity (make sure it’s an integer or float)
         current_qty = df.loc[df['coin'] == selected_coin, 'qty'].values[0]
-        st.markdown(f"<h3 style='text-align: right; font-weight: bold;'>qty: {current_qty}</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='text-align: right; font-weight: bold;'>qty:type({current_qty})</h3>", unsafe_allow_html=True)
         # Ensure that current_qty is a number (int or float), in case it’s NaN or another type
         if pd.isna(current_qty):
             current_qty = 0  # Set to 0 if it's NaN
@@ -34,7 +34,7 @@ def update_portfolio(df):
             current_qty = float(current_qty)  # Ensure it's a float, you can also use int(current_qty) if needed
 
         # Updated Quantity (ensure it's an int or float)
-        updated_qty = st.number_input(f'Enter updated quantity for {selected_coin}', value=current_qty, min_value=0)
+        updated_qty = st.number_input(f'Enter updated quantity for {selected_coin})
 
         # Update the quantity in the dataframe
         df.loc[df['coin'] == selected_coin, 'qty'] = updated_qty
