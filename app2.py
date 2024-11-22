@@ -68,7 +68,7 @@ total_initial_value = df['value_initial'].sum() * 90
 
 # Calculate the total portfolio value
 df['value'] = df['value'].astype(int)
-df['value_inr'] = df['value_inr'].apply(lambda x: "{:,.0f}".format(x))
+df['value_inr'] = df['value_inr'] * 90
 
 #st.markdown(f"<h3 style='text-align: right; font-weight: bold;'>check: {total_initial_value}</h3>", unsafe_allow_html=True)
 
