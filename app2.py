@@ -45,6 +45,11 @@ def update_portfolio(df):
     return df
 
 # Update portfolio based on user inputs
+
+df.loc[df['coin'] == 'USDT', 'prev_price'] = 1
+df.loc[df['coin'] == 'USDT', 'percent_gain'] = 0
+
+
 df = update_portfolio(df)
 
 # Recalculate portfolio metrics
