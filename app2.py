@@ -17,16 +17,23 @@ def load_data():
 df = load_data()
 
 # Function to update portfolio based on user input
+# Function to update portfolio based on user input
 def update_portfolio(df):
     while True:
         # Coin Name
         coin_options = df['coin'].unique()
         selected_coin = st.selectbox('Select Coin', coin_options)
 
-        # Current Quantity
+        # Current Quantity (make sure it’s an integer or float)
         current_qty = df.loc[df['coin'] == selected_coin, 'qty'].values[0]
+        
+        # Ensure that current_qty is a number (int or float), in case it’s NaN or another type
+        if pd.isna(current_qty):
+            current_qty = 0  # Set to 0 if it's NaN
+        else:
+            current_qty = float(current_qty)  # Ensure it's a float, you can also use int(current_qty) if needed
 
-        # Updated Quantity
+        # Updated Quantity (ensure it's an int or float)
         updated_qty = st.number_input(f'Enter updated quantity for {selected_coin}', value=current_qty, min_value=0)
 
         # Update the quantity in the dataframe
@@ -43,6 +50,7 @@ def update_portfolio(df):
             break
 
     return df
+
 
 # Update portfolio based on user inputs
 
